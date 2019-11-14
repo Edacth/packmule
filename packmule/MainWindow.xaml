@@ -3,10 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:packmule"
+        xmlns:uc="clr-namespace:packmule"
         mc:Ignorable="d"
-        Title="Packmule" Height="450" Width="800">
-    <Grid>
-        
+        Title="Packmule" Height="600" Width="1000">
+    <Grid Margin="11,10,10,10">
+
+        <uc:PackHub Title="TEST" ID="Whaaa"/>
+
+        <uc:LimitedInputUserControl Title="LLIUC" MaxLength="30" Height="50"/>
     </Grid>
 </Window>
