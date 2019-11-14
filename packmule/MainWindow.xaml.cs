@@ -23,6 +23,13 @@ namespace packmule
         public MainWindow()
         {
             InitializeComponent();
+
+            List<PackHub> items = new List<PackHub>();
+            items.Add(new PackHub() { Title = "1" });
+            items.Add(new PackHub() { Title = "2" });
+            items.Add(new PackHub() { Title = "3" });
+
+            icList.ItemsSource = items;
         }
     }
 }

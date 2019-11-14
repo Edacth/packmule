@@ -7,9 +7,20 @@
         mc:Ignorable="d"
         Title="Packmule" Height="600" Width="1000">
     <Grid Margin="11,10,10,10">
+        <ItemsControl Name="icList">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="2"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
 
-        <uc:PackHub Title="TEST" ID="Whaaa"/>
-
-        <uc:LimitedInputUserControl Title="LLIUC" MaxLength="30" Height="50"/>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <!--<TextBlock Text="Test"/>-->
+                    <uc:PackHub Title="TEST" ID="Whaaa" Margin="300,52,221,47"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!--<uc:PackHub Title="TEST" ID="Whaaa" Margin="300,52,221,47"/>-->
     </Grid>
 </Window>

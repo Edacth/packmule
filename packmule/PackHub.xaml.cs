@@ -23,7 +23,7 @@ namespace packmule
         public PackHub()
         {
             InitializeComponent();
-            Title = "WHAT";
+            this.DataContext = this;
         }
         public string Title { get; set; }
 

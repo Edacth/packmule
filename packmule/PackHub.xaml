@@ -8,9 +8,11 @@
              d:DesignHeight="450" d:DesignWidth="450" Background="#FFD9F8FF" Width="450" Height="450">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" MinHeight="122"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <Canvas Background="#FF84ABFF" Height="20" />
         <Label Content="{Binding Title}"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="184,206,0,-203" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </UserControl>
