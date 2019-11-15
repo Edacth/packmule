@@ -12,20 +12,29 @@ namespace packmule.ViewModels
         private string _title;
         public string Title { get => _title; set => SetProperty(ref _title, value); }
 
-        private string _substring;
-        public string Subtitle { get => _substring; set => SetProperty(ref _substring, value); }
-
-        private readonly DelegateCommand _changeNameCommand;
-        public ICommand ChangeNameCommand => _changeNameCommand;
-
         public ViewModel()
         {
-            _changeNameCommand = new DelegateCommand(OnChangeName);
+            _changeTitleCommand = new DelegateCommand(OnChangeName, CanChangeName);
         }
+
+        // Change title command
+        private readonly DelegateCommand _changeTitleCommand;
+        public ICommand ChangeTitleCommand => _changeTitleCommand;
 
         private void OnChangeName(object commandParamter)
         {
             Title = "Walter";
+            _changeTitleCommand.InvokeCanExecuteChanged();
+        }
+
+        private bool CanChangeName(object commandParameter)
+        {
+            return Title != "Walter";
+        }
+
+        private void OnCreatePackHub()
+        {
+
         }
     }
 }

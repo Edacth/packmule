@@ -6,8 +6,18 @@
         xmlns:uc="clr-namespace:packmule"
         mc:Ignorable="d"
         Title="Packmule" Height="600" Width="1000">
-    <Grid Margin="11,10,10,10">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <Grid Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="New Pack Hub"/>
+            </MenuItem>
+        </Menu>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ItemsControl Name="icList">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -22,18 +32,11 @@
                         <uc:PackHub Title="TEST" ID="Whaaa" Margin="300,52,221,47" FocusManager.IsFocusScope="True"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-                <Button Content="Button" Command="{Binding Path=ChangeNameCommand }" Width="75"/>
             </ItemsControl>
         </ScrollViewer>
 
-        <StackPanel Name="focusScope1" 
-            FocusManager.IsFocusScope="True"
-            Height="200" Width="200">
-            <Button Name="button1" Height="50" Width="50"/>
-            <Button Name="button2" Height="50" Width="50"/>
-        </StackPanel>
-        <TextBox Text="{Binding Title}" HorizontalAlignment="Left" Height="24" Margin="292,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox Text="{Binding Subtitle}" HorizontalAlignment="Left" Height="24" Margin="292,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox Text="{Binding Title}" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="292,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox Text="{Binding Subtitle}" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="292,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <!--<uc:PackHub Title="TEST" ID="Whaaa" Margin="300,52,221,47"/>-->
     </Grid>
 </Window>
