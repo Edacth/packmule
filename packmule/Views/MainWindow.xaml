@@ -4,8 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uc="clr-namespace:packmule"
+        xmlns:viewModels="clr-namespace:packmule.ViewModels"
         mc:Ignorable="d"
         Title="Packmule" Height="600" Width="1000">
+    <Window.DataContext>
+        <vm:ViewModel/>
+    </Window.DataContext>
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static viewModels:vi}"
+                        Executed="ChangeTitleCmdExecuted" />
+    </Window.CommandBindings>
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -34,6 +43,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+        <Button Content="Button"  Width="75" Margin="198,66,720,443" Grid.Row="1" Height="25"/>
 
         <TextBox Text="{Binding Title}" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="292,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBox Text="{Binding Subtitle}" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="292,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>

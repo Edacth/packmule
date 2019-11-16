@@ -24,13 +24,11 @@ namespace packmule
         {
             ViewModels.ViewModel viewModel = new ViewModels.ViewModel();
             viewModel.Title = "Kevin";
-            viewModel.Subtitle = "the lad";
             DataContext = viewModel;
 
             InitializeComponent();
 
             viewModel.Title = "Mark";
-            viewModel.Subtitle = "the man";
             //viewModel.OnPropertyChanged(nameof(viewModel.Title));
 
             //List<PackHub> items = new List<PackHub>();
@@ -39,6 +37,11 @@ namespace packmule
             //items.Add(new PackHub() { Title = "3" });
 
             //icList.ItemsSource = items;
+        }
+
+        private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+
         }
     }
 }
