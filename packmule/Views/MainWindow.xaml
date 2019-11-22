@@ -7,10 +7,6 @@
         mc:Ignorable="d"
         Title="Packmule" Height="600" Width="1000">
 
-    <!--<Window.CommandBindings>
-        <CommandBinding Command="{x:Static pm:MainWindow.CustomRoutedCommand}"
-                        Executed="ExecutedCustomCommand" />
-    </Window.CommandBindings>-->
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,31 +14,32 @@
         </Grid.RowDefinitions>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="New Pack Hub"/>
+                <MenuItem Header="New Pack Hub" Command="{x:Static pm:MainWindow.CreatePackHubCmd}"/>
             </MenuItem>
         </Menu>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ItemsControl Name="icList">
+            <ItemsControl Name="icList" ItemsSource="{Binding PackHubs}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <!--<UniformGrid Columns="2"/>-->
+                        <!--This is the section for the background of the itempanel-->
                         <Canvas/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <!--<TextBlock Text="Test"/>-->
+                        <!--This is the section for the item template of the itempanel-->
                         <pm:PackHub Title="TEST" ID="Whaaa" Margin="300,52,221,47" FocusManager.IsFocusScope="True"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button Content="Button" Command="{x:Static pm:MainWindow.ChangeTitleCmd}" Width="75" Margin="198,66,720,443" Grid.Row="1" Height="25"/>
-
+        <TextBlock Name="Jeff" TextWrapping="Wrap" Margin="286,263,604,264" Text="{Binding PackHubsCount, Mode=OneWay}" Grid.Row="1"/>
+        <!--These are text binding examples-->
+        <!--<Button Content="Button" Command="{x:Static pm:MainWindow.ChangeTitleCmd}" Width="75" Margin="198,66,720,443" Grid.Row="1" Height="25"/>
         <TextBox Text="{Binding Title}" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="292,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox Text="{Binding Subtitle}" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="292,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <!--<uc:PackHub Title="TEST" ID="Whaaa" Margin="300,52,221,47"/>-->
+        <TextBox Text="{Binding Subtitle}" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="292,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>-->
     </Grid>
 </Window>

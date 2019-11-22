@@ -12,6 +12,15 @@ namespace packmule.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
         protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName]string propertyName = null)
         {
             if (!EqualityComparer<T>.Default.Equals(field, newValue))

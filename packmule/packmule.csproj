@@ -79,6 +79,7 @@
     <Compile Include="LimitedInputUserControl.xaml.cs">
       <DependentUpon>LimitedInputUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\PackHub.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -121,8 +122,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
