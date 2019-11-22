@@ -80,6 +80,7 @@
       <DependentUpon>LimitedInputUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\PackHub.cs" />
+    <Compile Include="Vector2.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -87,14 +88,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\PackHub.xaml">
+    <Page Include="Views\PackHubUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Views\PackHub.xaml.cs">
-      <DependentUpon>PackHub.xaml</DependentUpon>
+    <Compile Include="Views\PackHubUC.xaml.cs">
+      <DependentUpon>PackHubUC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -18,15 +18,11 @@ namespace packmule
     /// <summary>
     /// Interaction logic for PackHub.xaml
     /// </summary>
-    public partial class PackHub : UserControl
+    public partial class PackHubUC : UserControl
     {
-        public PackHub()
+        public PackHubUC()
         {
             InitializeComponent();
-            this.DataContext = this;
         }
-        public string Title { get; set; }
-
-        public string ID { get; set; }
     }
 }

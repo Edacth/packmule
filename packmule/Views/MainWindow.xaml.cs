@@ -41,10 +41,10 @@ namespace packmule
             this.CommandBindings.Add(customCommandBinding);
             this.CommandBindings.Add(ChangeTitleCmdBinding);
             this.CommandBindings.Add(createPackHubCmdBinding);
-
             //viewModel.OnPropertyChanged(nameof(viewModel.Title));
 
             InitializeComponent();
+            Title = "Test";
 
             viewModel.Title = "Mark";
 

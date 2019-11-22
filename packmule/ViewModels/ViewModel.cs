@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using packmule.Models;
 
 namespace packmule.ViewModels
 {
@@ -18,18 +19,19 @@ namespace packmule.ViewModels
         ObservableCollection<PackHub> _packHubs = new ObservableCollection<PackHub>();
         public ObservableCollection<PackHub> PackHubs { get => _packHubs; }
 
-        public string PackHubsCount { get => _packHubs.Count.ToString(); }
+        public int PackHubsCount { get => _packHubs.Count; }
         public ViewModel()
         {
-
-            PackHubs.Add(new PackHub() { Title = "1" });
+            Title = "Test";
+            //PackHubs.Add(new PackHub() { Title = "1" });
             //PackHubs.Add(new PackHub() { Title = "2", Margin = new System.Windows.Thickness(200, 200, 0, 0) });
         }
 
         public void CreatePackHub()
         {
             //PackHubs.Add(new PackHub() { Title = (PackHubs.Count + 1).ToString()}); 
-            PackHubs.Add(new PackHub() { Title = "2", Margin = new System.Windows.Thickness(200, 200, 0, 0) });
+            PackHubs.Add(new PackHub(PackHubs.Count));
+            //{ Title = "Title", ID = (PackHubs.Count + 1), Margin = new System.Windows.Thickness(450 * PackHubsCount, 0, 0, 0) });
             OnPropertyChanged(nameof(PackHubsCount));
         }
     }

@@ -19,19 +19,20 @@
         </Menu>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ItemsControl Name="icList" ItemsSource="{Binding PackHubs}">
+            <ItemsControl x:Name="icList" ItemsSource="{Binding PackHubs}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <!--<UniformGrid Columns="2"/>-->
+                        <UniformGrid Columns="2"/>
                         <!--This is the section for the background of the itempanel-->
-                        <Canvas/>
+                        <!--<Canvas/>-->
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <!--This is the section for the item template of the itempanel-->
-                        <pm:PackHub Title="TEST" ID="Whaaa" Margin="300,52,221,47" FocusManager.IsFocusScope="True"/>
+                        <pm:PackHubUC Margin="300,52,221,47" />
+                        <!--{Binding ElementName=icList, Path=DataContext.Title}-->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
