@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="Packmule" Height="600" Width="1000">
 
+    <Window.InputBindings>
+        <KeyBinding Command="{x:Static pm:MainWindow.CreatePackHubCmd}"
+                    Gesture="CTRL+N"/>
+    </Window.InputBindings>
+    
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -22,22 +27,23 @@
             <ItemsControl x:Name="icList" ItemsSource="{Binding PackHubs}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="2"/>
+                        <!--<UniformGrid Columns="2"/>-->
                         <!--This is the section for the background of the itempanel-->
-                        <!--<Canvas/>-->
+                        <Canvas/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <!--This is the section for the item template of the itempanel-->
-                        <pm:PackHubUC Margin="300,52,221,47" />
+                        <pm:PackHubUC  />
+                        <!--Margin="{Binding Position}"-->
                         <!--{Binding ElementName=icList, Path=DataContext.Title}-->
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <TextBlock Name="Jeff" TextWrapping="Wrap" Margin="286,263,604,264" Text="{Binding PackHubsCount, Mode=OneWay}" Grid.Row="1"/>
+        <TextBlock Name="Jeff" TextWrapping="Wrap" Margin="934,517,10,10" Text="{Binding PackHubsCount, Mode=OneWay}" Grid.Row="1"/>
         <!--These are text binding examples-->
         <!--<Button Content="Button" Command="{x:Static pm:MainWindow.ChangeTitleCmd}" Width="75" Margin="198,66,720,443" Grid.Row="1" Height="25"/>
         <TextBox Text="{Binding Title}" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="292,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>

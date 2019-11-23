@@ -4,8 +4,28 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:uc="clr-namespace:packmule"
+             xmlns:pm="clr-namespace:packmule"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="450" Background="#FFD9F8FF" Width="450" Height="450">
+             d:DesignHeight="450" d:DesignWidth="450" Background="#FFD9F8FF" Width="450" Height="450" Margin="{Binding Position}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="PackInfo">
+            <Grid Width="399" VerticalAlignment="Top" Margin="0" Height="59" HorizontalAlignment="Right">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="37*"/>
+                    <RowDefinition Height="22*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Grid.RowSpan="2" Margin="0,0,0,1"/>
+                <TextBlock Text="Name" Grid.Column="1" VerticalAlignment="Top" Margin="10,10,10,0" Height="16"/>
+                <TextBlock Text="Description" Grid.Column="1" VerticalAlignment="Top" Margin="10,25,10,0" Height="16" Grid.RowSpan="2"/>
+                <Button Grid.Column="2" Margin="0,2,0,1" Grid.RowSpan="2" Height="59" VerticalAlignment="Bottom" />
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,6 +34,8 @@
         <Canvas Background="#FF84ABFF" Height="20" />
         <Label Content="{Binding Title}" Margin="0,0,247,1" Width="200"/>
         <Label Content="{Binding ID}" HorizontalAlignment="Right" Width="64"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="190,388,0,-384" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
+        <ListBox ItemsSource="{Binding Entries}" ItemTemplate="{DynamicResource ResourceKey=PackInfo}" HorizontalAlignment="Left" Height="344" Margin="10,10,0,-326" Grid.Row="1" VerticalAlignment="Top" Width="430"/>
+        <Button Content="Button" Command="{x:Static pm:MainWindow.MoveCmd}" CommandParameter="{Binding ID }" HorizontalAlignment="Left" Margin="365,359,0,-354" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
+        <TextBox Text="{Binding BaseDirectory}" Height="23" Margin="10,396,10,-377" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

@@ -22,9 +22,9 @@ namespace packmule
     {
         ViewModels.ViewModel viewModel = new ViewModels.ViewModel();
 
-        public static RoutedCommand CustomRoutedCommand = new RoutedCommand();
         public static RoutedCommand ChangeTitleCmd = new RoutedCommand();
         public static RoutedCommand CreatePackHubCmd = new RoutedCommand();
+        public static RoutedCommand MoveCmd = new RoutedCommand();
 
 
         public MainWindow()
@@ -33,34 +33,20 @@ namespace packmule
             DataContext = viewModel;
 
             // Create command bindings
-            CommandBinding customCommandBinding = new CommandBinding(CustomRoutedCommand, ExecutedCustomCommand, CanExecuteCustomCommand);
-            CommandBinding ChangeTitleCmdBinding = new CommandBinding(ChangeTitleCmd, ChangeTitleCmdExecuted, ChangeTitleCmdCanExecute);
+            CommandBinding changeTitleCmdBinding = new CommandBinding(ChangeTitleCmd, ChangeTitleCmdExecuted, ChangeTitleCmdCanExecute);
             CommandBinding createPackHubCmdBinding = new CommandBinding(CreatePackHubCmd, CreatePackHubExecuted, CreatePackHubCanExecute);
+            CommandBinding moveCmdBinding = new CommandBinding(MoveCmd, SetPHPositionExecuted, SetPHPositionCanExecute);
             
             // Attach CommandBindings to root window
-            this.CommandBindings.Add(customCommandBinding);
-            this.CommandBindings.Add(ChangeTitleCmdBinding);
+            this.CommandBindings.Add(changeTitleCmdBinding);
             this.CommandBindings.Add(createPackHubCmdBinding);
+            this.CommandBindings.Add(moveCmdBinding);
             //viewModel.OnPropertyChanged(nameof(viewModel.Title));
 
             InitializeComponent();
             Title = "Test";
 
             viewModel.Title = "Mark";
-
-            Binding binding1 = new Binding();
-            binding1.Source = viewModel.PackHubs;
-            //icList.SetBinding(icList.ItemsSource, binding1);
-        }
-
-        private void ExecutedCustomCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            System.Windows.MessageBox.Show("Custom Command Executed");
-        }
-
-        private void CanExecuteCustomCommand(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
         }
 
         private void ChangeTitleCmdExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -81,6 +67,29 @@ namespace packmule
         private void CreatePackHubCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = viewModel.PackHubs.Count < 4;
+        }
+
+        private void SetPHPositionExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Parameter != null)
+            {
+                try
+                {
+                    int id = (int)(e.Parameter as int?);
+                    //viewModel.PHSetPosition(id, new Thickness(100, 100, 0 ,0));
+                    viewModel.PHTranslate(id, new Thickness(100, 100, 0, 0));
+                    
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+        }
+
+        private void SetPHPositionCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
         }
     }
 }
