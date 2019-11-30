@@ -17,11 +17,11 @@ namespace packmule.ViewModels
 
         private string _title;
         public string Title { get => _title; set => SetProperty(ref _title, value); }
-
-        ObservableCollection<PackHub> _packHubs = new ObservableCollection<PackHub>();
+        private ObservableCollection<PackHub> _packHubs = new ObservableCollection<PackHub>();
         public ObservableCollection<PackHub> PackHubs { get => _packHubs; }
+        private int _selectedPH;
+        public int SelectedPH { get => _selectedPH; set => SetProperty(ref _selectedPH, value); }
 
-        public int PackHubsCount { get => _packHubs.Count; }
         public ViewModel()
         {
 
@@ -30,17 +30,19 @@ namespace packmule.ViewModels
         public void CreatePackHub()
         {
             PackHubs.Add(new PackHub(PackHubs.Count, new Thickness(450 * PackHubs.Count, 0, 0, 0)));
+            
         }
 
         public void PHSetPosition(int id, Thickness newPosition)
         {
 
             PackHubs[id].Position = newPosition;
-            Console.WriteLine(id);
+            //Console.WriteLine(id);
         }
 
         public void PHTranslate(int id, Thickness translationAmount)
         {
+            if (id < 0 || id > PackHubs.Count - 1) { Console.WriteLine("PHTranslate: Id out of bounds"); return; }
             Thickness currentPos = PackHubs[id].Position;
             Thickness newPos = new Thickness(currentPos.Left + translationAmount.Left,
                                              currentPos.Top + translationAmount.Top,

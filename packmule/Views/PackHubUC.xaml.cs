@@ -25,5 +25,37 @@ namespace packmule
             InitializeComponent();
             
         }
+
+        // This shit is magic
+        // https://stackoverflow.com/questions/3067617/raising-an-event-on-parent-window-from-a-user-control-in-net-c-sharp
+        public static readonly RoutedEvent MouseDragEvent =
+            EventManager.RegisterRoutedEvent("MouseDragEvent", RoutingStrategy.Bubble,
+                typeof(RoutedEvent), typeof(PackHubUC));
+
+        public static readonly RoutedEvent SetDragStartPointEvent =
+            EventManager.RegisterRoutedEvent("SetDragStartPointEvent", RoutingStrategy.Bubble,
+                typeof(RoutedEvent), typeof(PackHubUC));
+
+        public event RoutedEventHandler MouseDrag
+        {
+            add { AddHandler(MouseDragEvent, value); }
+            remove { RemoveHandler(MouseDragEvent, value); }
+        }
+
+        public event RoutedEventHandler SetDragStartPoint
+        {
+            add { AddHandler(SetDragStartPointEvent, value); }
+            remove { RemoveHandler(SetDragStartPointEvent, value); }
+        }
+
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(SetDragStartPointEvent, e));
+        }
+
+        private void OnPreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(MouseDragEvent, e));
+        }
     }
 }

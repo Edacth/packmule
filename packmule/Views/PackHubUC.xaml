@@ -6,6 +6,7 @@
              xmlns:uc="clr-namespace:packmule"
              xmlns:pm="clr-namespace:packmule"
              mc:Ignorable="d" 
+             PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown" PreviewMouseMove="OnPreviewMouseMove"
              d:DesignHeight="450" d:DesignWidth="450" Background="#FFD9F8FF" Width="450" Height="450" Margin="{Binding Position}">
     <UserControl.Resources>
         <DataTemplate x:Key="PackInfo">
@@ -31,11 +32,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Canvas Background="#FF84ABFF" Height="20" />
-        <Label Content="{Binding Title}" Margin="0,0,247,1" Width="200"/>
+        <Canvas Background="#FF84ABFF" Height="20"/>
+        <Label Content="{Binding Title}" Margin="0,0,250,0" Width="200"/>
         <Label Content="{Binding ID}" HorizontalAlignment="Right" Width="64"/>
         <ListBox ItemsSource="{Binding Entries}" ItemTemplate="{DynamicResource ResourceKey=PackInfo}" HorizontalAlignment="Left" Height="344" Margin="10,10,0,-326" Grid.Row="1" VerticalAlignment="Top" Width="430"/>
-        <Button Content="Button" Command="{x:Static pm:MainWindow.MoveCmd}" CommandParameter="{Binding ID }" HorizontalAlignment="Left" Margin="365,359,0,-354" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Button" Command="{x:Static pm:MainWindow.SetSelectedPHCmd}" CommandParameter="{Binding ID }" HorizontalAlignment="Left" Margin="365,359,0,-354" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Move Event" HorizontalAlignment="Left" Margin="275,359,0,-336" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
         <TextBox Text="{Binding BaseDirectory}" Height="23" Margin="10,396,10,-377" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

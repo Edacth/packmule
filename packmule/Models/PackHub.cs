@@ -19,7 +19,7 @@ namespace packmule.Models
         private Thickness _position;
         public Thickness Position { get => _position; set => SetProperty(ref _position, value); } 
         private string _baseDirectory;
-        public string BaseDirectory { get => _baseDirectory; set => _baseDirectory = value; }
+        public string BaseDirectory { get => _baseDirectory; set => SetProperty(ref _baseDirectory, value); }
         private List<PackInfo> _entries = new List<PackInfo>();
         public List<PackInfo> Entries { get => _entries; }
 
