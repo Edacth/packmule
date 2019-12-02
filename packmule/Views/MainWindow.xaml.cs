@@ -64,13 +64,16 @@ namespace packmule
 
         private void PackHubUC_SetDragStartPoint(object sender, RoutedEventArgs e)
         {
-            MouseButtonEventArgs mouseArgs = e.OriginalSource as MouseButtonEventArgs;
+            MouseButtonEventArgs mouseArgs = (e as DragEventArgs).MouseArgs;
+            viewModel.SelectedPH = (e as DragEventArgs).ID;
             dragStartPoint = mouseArgs.GetPosition(mouseArgs.Source as IInputElement);
-            //Console.WriteLine(dragStartPoint);
         }
 
         private void PackHubUC_MouseDragEventHandlerMethod(object sender, RoutedEventArgs e)
         {
+            // TODO: This could use refactoring. Avoid using the e.sources and e.original source.
+            // Instead create a class that stores the data and pass it along instead of doing this
+            // weird digging.
             MouseEventArgs mouseArgs = e.OriginalSource as MouseEventArgs;
             IInputElement source = e.Source as IInputElement;
             if (mouseArgs.LeftButton == MouseButtonState.Pressed)

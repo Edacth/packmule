@@ -50,12 +50,36 @@ namespace packmule
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(SetDragStartPointEvent, e));
+            RaiseEvent( new DragEventArgs(SetDragStartPointEvent, (DataContext as packmule.Models.PackHub).ID, e));
+            Console.WriteLine("LeftButtonDown");
         }
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
             RaiseEvent(new RoutedEventArgs(MouseDragEvent, e));
+        }
+    }
+
+    // Creating my own args because I need to pass along addtional data
+    public class DragEventArgs : RoutedEventArgs
+    {
+        private readonly int _id;
+        private readonly MouseButtonEventArgs _mouseArgs;
+
+        public int ID
+        {
+            get { return _id; }
+        }
+
+        public MouseButtonEventArgs MouseArgs
+        {
+            get { return _mouseArgs; }
+        }
+
+        public DragEventArgs(RoutedEvent routedEvent, int _id, MouseButtonEventArgs _mouseArgs) : base(routedEvent)
+        {
+            this._id = _id;
+            this._mouseArgs = _mouseArgs;
         }
     }
 }
