@@ -22,6 +22,7 @@ namespace packmule.ViewModels
         private int _selectedPH;
         public int SelectedPH { get => _selectedPH; set => SetProperty(ref _selectedPH, value); }
 
+        public static DirectoryStructure comMojang = new DirectoryStructure("development_behavior_packs", "development_resouce_packs", "minecraftWorlds");
         public ViewModel()
         {
 

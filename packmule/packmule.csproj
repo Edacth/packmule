@@ -76,10 +76,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DirectoryStructure.cs" />
     <Compile Include="LimitedInputUserControl.xaml.cs">
       <DependentUpon>LimitedInputUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\PackHub.cs" />
+    <Compile Include="Models\PackInfo.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
