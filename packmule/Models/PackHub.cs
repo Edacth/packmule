@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.IO;
+using Newtonsoft;
 
 using Thickness = System.Windows.Thickness;
 
@@ -65,7 +66,9 @@ namespace packmule.Models
                     {
                         text = sr.ReadToEnd();
                     }
-                    
+                    PackInfo entry = Newtonsoft.Json.JsonConvert.DeserializeObject<PackInfo>(text);
+                    BPEntries.Add(entry);
+                    // TODO: If name/desc = "pack.name/desc" find the lang file and get the name/desc from there
                 }
             }
             catch (DirectoryNotFoundException e)
@@ -73,8 +76,6 @@ namespace packmule.Models
                 Console.WriteLine("The process failed: {0}", e.ToString());
                 return;
             }
-
-
         }
 
         private void CopyAll(DirectoryInfo source, DirectoryInfo target)
@@ -137,18 +138,5 @@ namespace packmule.Models
             return false;
         }
         #endregion
-    }
-
-    public class PackInfo
-    {
-        public string Directory { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-
-        public PackInfo(string _Name, string _Description)
-        {
-            Name = _Name;
-            Description = _Description;
-        }
     }
 }
