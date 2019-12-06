@@ -28,7 +28,7 @@
                 <MenuItem Header="New Pack Hub" Command="{x:Static pm:MainWindow.CreatePackHubCmd}"/>
             </MenuItem>
         </Menu>
-        
+
         <!-- Middle Row-->
         <!--<Line X1="0" Y1="0" X2="100" Y2="100" Stroke="Black" StrokeThickness="6" Grid.Row="1"/>-->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -51,11 +51,12 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        
+
         <!-- Bottom row -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
-            <TextBlock TextWrapping="Wrap" Text="{Binding SelectedPH, StringFormat='Selected {0}', Mode=OneWay, UpdateSourceTrigger=Default}" Grid.Row="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
-            <TextBlock TextWrapping="Wrap" Text="{Binding PackHubs.Count, StringFormat='Count {0}', Mode=OneWay, UpdateSourceTrigger=Default}" Grid.Row="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+            <CheckBox Content="Hub Drag" HorizontalAlignment="Right" Height="18" Margin="0" VerticalAlignment="Bottom" Width="80"/>
+            <TextBlock TextWrapping="NoWrap" Text="{Binding SelectedPH, Mode=OneWay, StringFormat=Selected \{0\}, UpdateSourceTrigger=Default}" Grid.Row="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+            <TextBlock TextWrapping="NoWrap" Text="{Binding PackHubs.Count, Mode=OneWay, StringFormat=Count \{0\}, UpdateSourceTrigger=Default}" Grid.Row="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
         </StackPanel>
         <!--These are text binding examples-->
         <!--<Button Content="Button" Command="{x:Static pm:MainWindow.ChangeTitleCmd}" Width="75" Margin="198,66,720,443" Grid.Row="1" Height="25"/>

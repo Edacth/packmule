@@ -84,7 +84,7 @@ namespace packmule
                 {
                     viewModel.PHSetPosition(viewModel.SelectedPH, 
                         new Thickness(position.X - dragStartPoint.X, position.Y - dragStartPoint.Y, 0, 0));
-                    Console.WriteLine(position.X + " - " + dragStartPoint.X + " = " + (position.X - dragStartPoint.X));
+                    //Console.WriteLine(position.X + " - " + dragStartPoint.X + " = " + (position.X - dragStartPoint.X));
                     //Console.WriteLine(position.X - dragStartPoint.X + " " + (position.Y - dragStartPoint.Y));
                 }
 

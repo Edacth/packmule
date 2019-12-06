@@ -56,17 +56,45 @@ namespace packmule.Models
             DirectoryInfo directory = new DirectoryInfo(directoryPath);
             try
             {
-                DirectoryInfo[] dirs = directory.GetDirectories();
+                // Get array of directories in the development folder
+                DirectoryInfo[] packDirs = directory.GetDirectories();
 
-                foreach (DirectoryInfo item in dirs)
+                // Itterate through folders looking for packs
+                foreach (DirectoryInfo item in packDirs)
                 {
+                    // Read manifest and deserialize it
                     FileInfo[] manifestFiles = item.GetFiles("manifest.json");
-                    string text;
+                    string manifestText;
                     using (StreamReader sr = manifestFiles[0].OpenText())
                     {
-                        text = sr.ReadToEnd();
+                        manifestText = sr.ReadToEnd();
                     }
-                    PackInfo entry = Newtonsoft.Json.JsonConvert.DeserializeObject<PackInfo>(text);
+                    PackInfo entry = Newtonsoft.Json.JsonConvert.DeserializeObject<PackInfo>(manifestText);
+
+                    if (entry.header.name == "pack.name")
+                    {
+                        DirectoryInfo langDir = new DirectoryInfo(item.FullName + "\\texts");
+                        FileInfo[] langFiles = langDir.GetFiles("en_US.lang");
+
+                        string[] langLine;
+                        using (StreamReader sr = langFiles[0].OpenText())
+                        {
+                            string[] stringSeparators = new string[] { "=" };
+                            while (sr.EndOfStream == false)
+                            {
+                                langLine = sr.ReadLine().Split(stringSeparators, StringSplitOptions.None);
+                                if (langLine[0] == "pack.name" && langLine.Length > 1)
+                                {
+                                    entry.header.name = langLine[1];
+                                }
+                                if (langLine[0] == "pack.description" && langLine.Length > 1)
+                                {
+                                    entry.header.description = langLine[1];
+                                }
+                            }
+                        }
+                    }
+
                     BPEntries.Add(entry);
                     // TODO: If name/desc = "pack.name/desc" find the lang file and get the name/desc from there
                 }
