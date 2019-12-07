@@ -7,11 +7,19 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.IO;
 using Newtonsoft;
+using System.Collections.ObjectModel;
 
 using Thickness = System.Windows.Thickness;
 
 namespace packmule.Models
 {
+    public enum StructureTypes
+    {
+        ComMojang = 0, // development_behavior_packs, development_resource_packs, minecraftWorlds
+        ShortHand = 1, // BPs, RPs, worlds
+        SolvedStructure = 2 // Might depricate this one. I don't know if it has a place in a world with many packHubs.
+    }
+
     public class PackHub : INotifyPropertyChanged
     {
         private string _title;
@@ -21,11 +29,28 @@ namespace packmule.Models
         private Thickness _position;
         public Thickness Position { get => _position; set => SetProperty(ref _position, value); } 
         private string _baseDirectory;
-        public string BaseDirectory { get => _baseDirectory; set => SetProperty(ref _baseDirectory, value); }
-        private List<PackInfo> _bpEntries = new List<PackInfo>();
-        public List<PackInfo> BPEntries { get => _bpEntries; }
-        string defaultDirectory;
-        
+        public string BaseDirectory
+        {
+            get => _baseDirectory;
+            set
+            {
+                if (SetProperty(ref _baseDirectory, value))
+                    PopulateLists();
+            }
+        }
+        private ObservableCollection<PackInfo> _bpEntries = new ObservableCollection<PackInfo>();
+        public ObservableCollection<PackInfo> BPEntries { get => _bpEntries; }
+        private string defaultDirectory;
+        private StructureTypes _structureType;
+        public StructureTypes StructureType { get => _structureType; set => SetProperty(ref _structureType, value); }
+        static Dictionary<StructureTypes, DirectoryStructure> structurePaths = new Dictionary<StructureTypes, DirectoryStructure>();
+        // TODO: Put these DirectoryStructure into an ObservableCollections so I can bind the
+        // file structure combo box itemSource to it.
+        ObservableCollection<DirectoryStructure> _directoryStructures = new ObservableCollection<DirectoryStructure>();
+        ObservableCollection<DirectoryStructure> DirectoryStructures { get => _directoryStructures; set => SetProperty(ref _directoryStructures, value); }
+        public static DirectoryStructure comMojang = new DirectoryStructure("development_behavior_packs", "development_resouce_packs", "minecraftWorlds");
+        public static DirectoryStructure shortHand = new DirectoryStructure("behavior", "resource", "worlds");
+
 
         public PackHub(int _ID):this(_ID, new Thickness(0, 0, 0, 0))
         {
@@ -37,21 +62,25 @@ namespace packmule.Models
             Position = _Position;
             ID = _ID;
 
+            // TODO: Figure out why this doesn't update the binding.
+            DirectoryStructures.Add(new DirectoryStructure("development_behavior_packs", "development_resouce_packs", "minecraftWorlds"));
+
+            structurePaths.Add(StructureTypes.ComMojang, comMojang);
+            structurePaths.Add(StructureTypes.ShortHand, shortHand);
+
             defaultDirectory = @"C:\Users\s189062\Desktop\packmule\testEnvironment";
             BaseDirectory = defaultDirectory == null ? System.IO.Directory.GetCurrentDirectory() : defaultDirectory;
-            
-            DetectPacks(BaseDirectory + "\\" + ViewModels.ViewModel.comMojang.BPPath);
 
-            //Entries.Add(new PackInfo("Name1", "Desc1"));
-            //Entries.Add(new PackInfo("Name2", "Desc2"));
         }
 
         private void PopulateLists()
         {
-            throw new NotImplementedException();
+            // TODO: Add support for different directory structures. 
+            BPEntries.Clear();
+            DetectPacks(BPEntries, BaseDirectory + "\\" + structurePaths[StructureType].BPPath);
         }
 
-        private void DetectPacks(string directoryPath)
+        private void DetectPacks(ObservableCollection<PackInfo> entries, string directoryPath)
         {
             DirectoryInfo directory = new DirectoryInfo(directoryPath);
             try
@@ -95,7 +124,8 @@ namespace packmule.Models
                         }
                     }
 
-                    BPEntries.Add(entry);
+                    entries.Add(entry);
+                    
                     // TODO: If name/desc = "pack.name/desc" find the lang file and get the name/desc from there
                 }
             }

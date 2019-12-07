@@ -12,6 +12,7 @@ using Thickness = System.Windows.Thickness;
 
 namespace packmule.ViewModels
 {
+
     public class ViewModel : ViewModelBase
     {
 
@@ -21,8 +22,9 @@ namespace packmule.ViewModels
         public ObservableCollection<PackHub> PackHubs { get => _packHubs; }
         private int _selectedPH;
         public int SelectedPH { get => _selectedPH; set => SetProperty(ref _selectedPH, value); }
+        private bool _draggingEnabled;
+        public bool DraggingEnabled { get => _draggingEnabled; set => SetProperty(ref _draggingEnabled, value); }
 
-        public static DirectoryStructure comMojang = new DirectoryStructure("development_behavior_packs", "development_resouce_packs", "minecraftWorlds");
         public ViewModel()
         {
 

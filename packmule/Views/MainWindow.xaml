@@ -54,7 +54,7 @@
 
         <!-- Bottom row -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
-            <CheckBox Content="Hub Drag" HorizontalAlignment="Right" Height="18" Margin="0" VerticalAlignment="Bottom" Width="80"/>
+            <CheckBox Content="Dragging Enabled"  IsChecked="{Binding DraggingEnabled}" Grid.Row="2" HorizontalAlignment="Right" Height="18" Margin="0" VerticalAlignment="Bottom" Width="120"/>
             <TextBlock TextWrapping="NoWrap" Text="{Binding SelectedPH, Mode=OneWay, StringFormat=Selected \{0\}, UpdateSourceTrigger=Default}" Grid.Row="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
             <TextBlock TextWrapping="NoWrap" Text="{Binding PackHubs.Count, Mode=OneWay, StringFormat=Count \{0\}, UpdateSourceTrigger=Default}" Grid.Row="2" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
         </StackPanel>

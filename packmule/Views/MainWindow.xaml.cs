@@ -64,6 +64,8 @@ namespace packmule
 
         private void PackHubUC_SetDragStartPoint(object sender, RoutedEventArgs e)
         {
+            if (!viewModel.DraggingEnabled) { return; }
+
             MouseButtonEventArgs mouseArgs = (e as DragEventArgs).MouseArgs;
             viewModel.SelectedPH = (e as DragEventArgs).ID;
             dragStartPoint = mouseArgs.GetPosition(mouseArgs.Source as IInputElement);
@@ -71,6 +73,7 @@ namespace packmule
 
         private void PackHubUC_MouseDragEventHandlerMethod(object sender, RoutedEventArgs e)
         {
+            if (!viewModel.DraggingEnabled) { return; }
             // TODO: This could use refactoring. Avoid using the e.sources and e.original source.
             // Instead create a class that stores the data and pass it along instead of doing this
             // weird digging.
