@@ -8,15 +8,17 @@ namespace packmule
 {
     public class DirectoryStructure
     {
+        public string Name { get; set; }
         public string BPPath { get; set; }
         public string RPPath { get; set; }
-        public string worldPath { get; set; }
+        public string WorldPath { get; set; }
 
-        public DirectoryStructure(string _BPPath, string _RPPath, string _worldPath)
+        public DirectoryStructure(string _Name, string _BPPath, string _RPPath, string _WorldPath)
         {
+            Name = _Name;
             BPPath = _BPPath;
             RPPath = _RPPath;
-            worldPath = _worldPath;
+            WorldPath = _WorldPath;
         }
     }
 

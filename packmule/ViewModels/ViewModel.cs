@@ -15,19 +15,32 @@ namespace packmule.ViewModels
 
     public class ViewModel : ViewModelBase
     {
-
+        #region Title
         private string _title;
         public string Title { get => _title; set => SetProperty(ref _title, value); }
+        #endregion
+        #region PackHubs
         private ObservableCollection<PackHub> _packHubs = new ObservableCollection<PackHub>();
         public ObservableCollection<PackHub> PackHubs { get => _packHubs; }
+        #endregion
+        #region SelectedPH
         private int _selectedPH;
         public int SelectedPH { get => _selectedPH; set => SetProperty(ref _selectedPH, value); }
+        #endregion
+        #region DraggingEnabled
         private bool _draggingEnabled;
         public bool DraggingEnabled { get => _draggingEnabled; set => SetProperty(ref _draggingEnabled, value); }
+        #endregion
+        #region StructurePaths
+        static ObservableCollection<DirectoryStructure> _structurePaths = new ObservableCollection<DirectoryStructure>();
+        public static ObservableCollection<DirectoryStructure> StructurePaths { get => _structurePaths; }
+        #endregion
 
         public ViewModel()
         {
-
+            // TODO: Have this read from a config file and populate StructurePaths that way
+            StructurePaths.Add(new DirectoryStructure("ComMojang", "development_behavior_packs", "development_resource_packs", "minecraftWorlds"));
+            StructurePaths.Add(new DirectoryStructure("Short Hand", "behavior", "resource", "worlds"));
         }
 
         public void CreatePackHub()
@@ -38,9 +51,7 @@ namespace packmule.ViewModels
 
         public void PHSetPosition(int id, Thickness newPosition)
         {
-
             PackHubs[id].Position = newPosition;
-            //Console.WriteLine(id);
         }
 
         public void PHTranslate(int id, Thickness translationAmount)

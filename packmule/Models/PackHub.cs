@@ -13,21 +13,21 @@ using Thickness = System.Windows.Thickness;
 
 namespace packmule.Models
 {
-    public enum StructureTypes
-    {
-        ComMojang = 0, // development_behavior_packs, development_resource_packs, minecraftWorlds
-        ShortHand = 1, // BPs, RPs, worlds
-        SolvedStructure = 2 // Might depricate this one. I don't know if it has a place in a world with many packHubs.
-    }
-
     public class PackHub : INotifyPropertyChanged
     {
+        #region Title
         private string _title;
         public string Title { get => _title; set => SetProperty(ref _title, value); }
+        #endregion
+        #region ID
         private int _id;
         public int ID { get => _id; set => SetProperty(ref _id, value); }
+        #endregion
+        #region Position
         private Thickness _position;
-        public Thickness Position { get => _position; set => SetProperty(ref _position, value); } 
+        public Thickness Position { get => _position; set => SetProperty(ref _position, value); }
+        #endregion
+        #region BaseDirectory
         private string _baseDirectory;
         public string BaseDirectory
         {
@@ -38,19 +38,42 @@ namespace packmule.Models
                     PopulateLists();
             }
         }
+        #endregion
+        #region BPEntries
         private ObservableCollection<PackInfo> _bpEntries = new ObservableCollection<PackInfo>();
         public ObservableCollection<PackInfo> BPEntries { get => _bpEntries; }
+        #endregion
+        #region RPEntries
+        private ObservableCollection<PackInfo> _rpEntries = new ObservableCollection<PackInfo>();
+        public ObservableCollection<PackInfo> RPEntries { get => _rpEntries; }
+        #endregion
+        #region WorldEntries
+        private ObservableCollection<PackInfo> _worldEntries = new ObservableCollection<PackInfo>();
+        public ObservableCollection<PackInfo> WorldEntries { get => _worldEntries; }
+        #endregion
+        #region SelectedPackType
+        private int _selectedPackType;
+        public int SelectedPackType { get => _selectedPackType; set => SetProperty(ref _selectedPackType, value); }
+        #endregion
+        #region StructureType
+        private int _structureType;
+        public int StructureType { get => _structureType;
+            set
+            {
+                if (SetProperty(ref _structureType, value))
+                    PopulateLists();
+            }
+        }
+        #endregion
+        #region CopyTarget
+        private int _copyTarget;
+        public int CopyTarget { get => _copyTarget; set => SetProperty(ref _copyTarget, value); }
+        #endregion
+        #region BackupTarget
+        private int _backupTarget;
+        public int BackupTarget { get => _backupTarget; set => SetProperty(ref _backupTarget, value); }
+        #endregion
         private string defaultDirectory;
-        private StructureTypes _structureType;
-        public StructureTypes StructureType { get => _structureType; set => SetProperty(ref _structureType, value); }
-        static Dictionary<StructureTypes, DirectoryStructure> structurePaths = new Dictionary<StructureTypes, DirectoryStructure>();
-        // TODO: Put these DirectoryStructure into an ObservableCollections so I can bind the
-        // file structure combo box itemSource to it.
-        ObservableCollection<DirectoryStructure> _directoryStructures = new ObservableCollection<DirectoryStructure>();
-        ObservableCollection<DirectoryStructure> DirectoryStructures { get => _directoryStructures; set => SetProperty(ref _directoryStructures, value); }
-        public static DirectoryStructure comMojang = new DirectoryStructure("development_behavior_packs", "development_resouce_packs", "minecraftWorlds");
-        public static DirectoryStructure shortHand = new DirectoryStructure("behavior", "resource", "worlds");
-
 
         public PackHub(int _ID):this(_ID, new Thickness(0, 0, 0, 0))
         {
@@ -62,22 +85,19 @@ namespace packmule.Models
             Position = _Position;
             ID = _ID;
 
-            // TODO: Figure out why this doesn't update the binding.
-            DirectoryStructures.Add(new DirectoryStructure("development_behavior_packs", "development_resouce_packs", "minecraftWorlds"));
-
-            structurePaths.Add(StructureTypes.ComMojang, comMojang);
-            structurePaths.Add(StructureTypes.ShortHand, shortHand);
-
-            defaultDirectory = @"C:\Users\s189062\Desktop\packmule\testEnvironment";
+            defaultDirectory = @"C:\Users\Cade\Desktop\packmule\testEnvironment";
             BaseDirectory = defaultDirectory == null ? System.IO.Directory.GetCurrentDirectory() : defaultDirectory;
 
         }
 
         private void PopulateLists()
         {
-            // TODO: Add support for different directory structures. 
             BPEntries.Clear();
-            DetectPacks(BPEntries, BaseDirectory + "\\" + structurePaths[StructureType].BPPath);
+            RPEntries.Clear();
+            WorldEntries.Clear();
+            DetectPacks(BPEntries, BaseDirectory + "\\" + ViewModels.ViewModel.StructurePaths[StructureType].BPPath);
+            DetectPacks(RPEntries, BaseDirectory + "\\" + ViewModels.ViewModel.StructurePaths[StructureType].RPPath);
+            DetectPacks(WorldEntries, BaseDirectory + "\\" + ViewModels.ViewModel.StructurePaths[StructureType].WorldPath);
         }
 
         private void DetectPacks(ObservableCollection<PackInfo> entries, string directoryPath)
@@ -124,9 +144,7 @@ namespace packmule.Models
                         }
                     }
 
-                    entries.Add(entry);
-                    
-                    // TODO: If name/desc = "pack.name/desc" find the lang file and get the name/desc from there
+                    entries.Add(entry);                    
                 }
             }
             catch (DirectoryNotFoundException e)
