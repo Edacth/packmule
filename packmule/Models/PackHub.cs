@@ -35,7 +35,14 @@ namespace packmule.Models
             set
             {
                 if (SetProperty(ref _baseDirectory, value))
+                {
+                    DirectoryInfo DirInfo = new DirectoryInfo(value);
+                    if (DirInfo.Exists)
+                    {
+                    watcher.Path = value;
+                    }
                     PopulateLists();
+                }
             }
         }
         #endregion
@@ -73,6 +80,7 @@ namespace packmule.Models
         private int _backupTarget;
         public int BackupTarget { get => _backupTarget; set => SetProperty(ref _backupTarget, value); }
         #endregion
+        FileSystemWatcher watcher = new FileSystemWatcher();
         private string defaultDirectory;
 
         public PackHub(int _ID):this(_ID, new Thickness(0, 0, 0, 0))
@@ -81,13 +89,36 @@ namespace packmule.Models
 
         public PackHub(int _ID, System.Windows.Thickness _Position)
         {
-            Title = "Test Title";
             Position = _Position;
             ID = _ID;
+            Title = "Pack Hub: " + ID;
 
             defaultDirectory = @"C:\Users\s189062\Desktop\packmule\testEnvironment";
             BaseDirectory = defaultDirectory == null ? System.IO.Directory.GetCurrentDirectory() : defaultDirectory;
 
+            #region FileSystemWatcher
+            // https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=netframework-4.8
+            
+            watcher.Path = BaseDirectory;
+
+            // Watch for changes in LastAccess and LastWrite times, and
+            // the renaming of files or directories.
+            watcher.NotifyFilter = NotifyFilters.LastAccess
+                                    | NotifyFilters.LastWrite
+                                    | NotifyFilters.FileName
+                                    | NotifyFilters.DirectoryName;
+
+            watcher.Filter = "";
+
+            // Add event handlers
+            watcher.Changed += OnChanged;
+            watcher.Created += OnChanged;
+            watcher.Deleted += OnChanged;
+            watcher.Renamed += OnChanged;
+
+            watcher.EnableRaisingEvents = true;
+            
+            #endregion
         }
 
         private void PopulateLists()
@@ -222,6 +253,14 @@ namespace packmule.Models
                 return true;
             }
             return false;
+        }
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                PopulateLists();
+            });
+            //Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
         }
         #endregion
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using System.Windows;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using packmule.Models;
@@ -47,17 +47,19 @@ namespace packmule.ViewModels
         public void CreatePackHub()
         {
             PackHubs.Add(new PackHub(PackHubs.Count, new Thickness(450 * PackHubs.Count, 0, 0, 0)));
-            
         }
 
-        private void CopyPack(int sourceId, int packIndex, int destinationId )
+        public void CopyPack(int sourceId, int packIndex, int destinationId )
         {
             throw new NotImplementedException();
         }
 
-        private void DeletePack(int id, int packIndex)
+        public void DeletePack(int id, int packType, int packIndex)
         {
-            throw new NotImplementedException();
+            MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", "Deletion Confirmation", MessageBoxButton.YesNo);
+            if (messageBoxResult != MessageBoxResult.Yes) { return; }
+            DirectoryInfo directory = new DirectoryInfo(PackHubs[id].BPEntries[packIndex].Directory);
+            directory.Delete(true);
         }
 
         private void RecursiveCopy(DirectoryInfo source, DirectoryInfo target)

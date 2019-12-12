@@ -24,7 +24,8 @@
             <Button.CommandParameter>
                 <MultiBinding Converter="{StaticResource DeleteConverter}">
                     <Binding Path="Index"/>
-                    <Binding Path="Index"/>
+                    <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type TabControl}}" Path="SelectedIndex"/>
+                    <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type pm:PackHubUC}}" Path="DataContext.ID"/>
                 </MultiBinding>
             </Button.CommandParameter>
         </Button>

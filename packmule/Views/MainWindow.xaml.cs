@@ -54,8 +54,6 @@ namespace packmule
             //viewModel.OnPropertyChanged(nameof(viewModel.Title));
 
             InitializeComponent();
-            Title = "Test";
-            viewModel.Title = "Mark";
 
             // https://stackoverflow.com/questions/3067617/raising-an-event-on-parent-window-from-a-user-control-in-net-c-sharp
             AddHandler(PackHubUC.MouseDragEvent,
@@ -101,13 +99,16 @@ namespace packmule
         #region DeletePackCmd
         private void DeletePackCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            // TODO: Figure out how multibindings and converters work
             if (e.Parameter != null)
             {
                 try
                 {
-                    var values = (int[])(e.Parameter);
-                    Console.WriteLine("I'mma delete " + values[0]);
+                    object[] parameters = (object[])e.Parameter;
+                    int index = (int)(parameters[0]);
+                    int packType = (int)(parameters[1]);
+                    int id = (int)(parameters[2]);
+
+                    viewModel.DeletePack(id, packType, index);
                 }
                 catch (Exception ex)
                 {
