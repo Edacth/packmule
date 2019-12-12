@@ -10,6 +10,7 @@ namespace packmule.Models
     public class PackInfo
     {
         public string Directory { get; set; }
+        public int Index { get; set; }
         public string IconPath { get; set; }
         public ImageSource IconSource { get; set; }
 
@@ -17,6 +18,11 @@ namespace packmule.Models
         public Header header { get; set; }
         public List<Module> modules { get; set; }
         public List<Dependency> dependencies { get; set; }
+
+        public PackInfo()
+        {
+            header = new Header();
+        }
 
         public void LoadIcon()
         {

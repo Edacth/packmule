@@ -64,7 +64,7 @@
 
             <TabControl SelectedIndex="{Binding SelectedPackType, Mode=TwoWay}" Grid.Row="1" Canvas.Left="5" Canvas.Top="5" Margin="0" Width="440" Height="327">
                 <TabItem Header="Behavior">
-                    <ListBox ItemsSource="{Binding BPEntries}" Margin="0" Grid.Row="1" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right" Width="434">
+                    <ListBox Name="BListBox" ItemsSource="{Binding BPEntries}" Margin="0" Grid.Row="1" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right" Width="434">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <local:PackInfo/>
@@ -82,9 +82,16 @@
                     </ListBox>
                 </TabItem>
                 <TabItem Header="Worlds">
-                    <Grid Background="#FFE5E5E5"/>
+                    <ListBox ItemsSource="{Binding WorldEntries}" Margin="0" Grid.Row="1" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right" Width="434">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <local:PackInfo/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </TabItem>
             </TabControl>
+            <Button Content="Button" Command="{x:Static pm:MainWindow.DeletePackCmd}" CommandParameter="{Binding Source={x:Reference BListBox}, Path=SelectedIndex}" Canvas.Left="149" Canvas.Top="400" Width="75"/>
         </Canvas>
         <TextBox Text="{Binding BaseDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="23" Margin="10,12,10,10" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
     </Grid>

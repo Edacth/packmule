@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using packmule.Models;
+using System.IO;
 
 using Thickness = System.Windows.Thickness;
 
@@ -47,6 +48,47 @@ namespace packmule.ViewModels
         {
             PackHubs.Add(new PackHub(PackHubs.Count, new Thickness(450 * PackHubs.Count, 0, 0, 0)));
             
+        }
+
+        private void CopyPack(int sourceId, int packIndex, int destinationId )
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DeletePack(int id, int packIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RecursiveCopy(DirectoryInfo source, DirectoryInfo target)
+        {
+            throw new NotImplementedException();
+            //https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=netframework-4.8
+            if (source.FullName.ToLower() == target.FullName.ToLower())
+            {
+                return;
+            }
+
+            // Check if the target directory exists, if not, create it.
+            if (Directory.Exists(target.FullName) == false)
+            {
+                Directory.CreateDirectory(target.FullName);
+            }
+
+            // Copy each file into it's new directory.
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
+                fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+            }
+
+            // Copy each subdirectory using recursion.
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir =
+                    target.CreateSubdirectory(diSourceSubDir.Name);
+                RecursiveCopy(diSourceSubDir, nextTargetSubDir);
+            }
         }
 
         public void PHSetPosition(int id, Thickness newPosition)

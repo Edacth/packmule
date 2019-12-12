@@ -22,6 +22,7 @@ namespace packmule
     {
         ViewModels.ViewModel viewModel = new ViewModels.ViewModel();
 
+        public static RoutedCommand DeletePackCmd = new RoutedCommand();
         public static RoutedCommand ChangeTitleCmd = new RoutedCommand();
         public static RoutedCommand CreatePackHubCmd = new RoutedCommand();
         public static RoutedCommand PHSetPositionCmd = new RoutedCommand();
@@ -36,13 +37,15 @@ namespace packmule
             DataContext = viewModel;
 
             // Create command bindings
+            CommandBinding deletePackCmdBinding = new CommandBinding(DeletePackCmd, DeletePackCmdExecuted, DeletePackCmdCanExecute);
             CommandBinding changeTitleCmdBinding = new CommandBinding(ChangeTitleCmd, ChangeTitleCmdExecuted, ChangeTitleCmdCanExecute);
             CommandBinding createPackHubCmdBinding = new CommandBinding(CreatePackHubCmd, CreatePackHubCmdExecuted, CreatePackHubCanExecute);
             CommandBinding PHSetPositionCmdBinding = new CommandBinding(PHSetPositionCmd, PHSetPositionCmdExecuted, PHSetPositionCanExecute);
             CommandBinding PHTranslateCmdBinding = new CommandBinding(PHTranslateCmd, PHTranslateCmdExecuted, PHTranslateCmdCanExecute);
             CommandBinding SetSelectedPHCmdBinding = new CommandBinding(SetSelectedPHCmd, SetSelectedPHCmdExecuted, SetSelectedPHCmdCanExecute);
-            
+
             // Attach CommandBindings to root window
+            this.CommandBindings.Add(deletePackCmdBinding);
             this.CommandBindings.Add(changeTitleCmdBinding);
             this.CommandBindings.Add(createPackHubCmdBinding);
             this.CommandBindings.Add(PHSetPositionCmdBinding);
@@ -59,9 +62,9 @@ namespace packmule
                 new RoutedEventHandler(PackHubUC_MouseDragEventHandlerMethod));
             AddHandler(PackHubUC.SetDragStartPointEvent,
                 new RoutedEventHandler(PackHubUC_SetDragStartPoint));
-            //  HERE
         }
 
+        #region MouseDragEvent
         private void PackHubUC_SetDragStartPoint(object sender, RoutedEventArgs e)
         {
             if (!viewModel.DraggingEnabled) { return; }
@@ -93,7 +96,31 @@ namespace packmule
 
             }
         }
+        #endregion
 
+        #region DeletePackCmd
+        private void DeletePackCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            // TODO: Figure out how multibindings and converters work
+            if (e.Parameter != null)
+            {
+                try
+                {
+                    int index = (int)(e.Parameter as int?);
+                    Console.WriteLine("I'mma delete " + index);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+        }
+
+        private void DeletePackCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
         #region ChangeTitleCmd
         private void ChangeTitleCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {

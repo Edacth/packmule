@@ -17,7 +17,8 @@
             <ColumnDefinition Width="10*" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="#FFDC3434"/>
+        <Button Command="{x:Static pm:MainWindow.DeletePackCmd}" CommandParameter="{Binding Path=Index}" Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="#FFDC3434"/>
+        <!--<Button Command="{x:Static pm:MainWindow.DeletePackCmd}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=SelectedIndex}" Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="#FFDC3434"/>-->
         <TextBlock Text="{Binding header.name}" Grid.Column="1" VerticalAlignment="Top" Margin="10,10,10,0" Height="16"/>
         <TextBlock Text="{Binding header.description}" Grid.Column="1" VerticalAlignment="Top" Margin="10,0" Height="16" Grid.Row="1"/>
         <Button Grid.Column="3" Margin="0" Grid.RowSpan="2" Height="59" VerticalAlignment="Bottom" Content="&gt;" Background="#FFA4FF47" />

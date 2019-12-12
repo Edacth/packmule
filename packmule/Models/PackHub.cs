@@ -85,7 +85,7 @@ namespace packmule.Models
             Position = _Position;
             ID = _ID;
 
-            defaultDirectory = @"C:\Users\Cade\Desktop\packmule\testEnvironment";
+            defaultDirectory = @"C:\Users\s189062\Desktop\packmule\testEnvironment";
             BaseDirectory = defaultDirectory == null ? System.IO.Directory.GetCurrentDirectory() : defaultDirectory;
 
         }
@@ -97,7 +97,7 @@ namespace packmule.Models
             WorldEntries.Clear();
             DetectPacks(BPEntries, BaseDirectory + "\\" + ViewModels.ViewModel.StructurePaths[StructureType].BPPath);
             DetectPacks(RPEntries, BaseDirectory + "\\" + ViewModels.ViewModel.StructurePaths[StructureType].RPPath);
-            DetectPacks(WorldEntries, BaseDirectory + "\\" + ViewModels.ViewModel.StructurePaths[StructureType].WorldPath);
+            DetectWorlds(WorldEntries, BaseDirectory + "\\" + ViewModels.ViewModel.StructurePaths[StructureType].WorldPath);
         }
 
         private void DetectPacks(ObservableCollection<PackInfo> entries, string directoryPath)
@@ -107,44 +107,57 @@ namespace packmule.Models
             {
                 // Get array of directories in the development folder
                 DirectoryInfo[] packDirs = directory.GetDirectories();
+                int itemIndex = 0;
 
                 // Itterate through folders looking for packs
                 foreach (DirectoryInfo item in packDirs)
                 {
                     // Read manifest and deserialize it
                     FileInfo[] manifestFiles = item.GetFiles("manifest.json");
+                    // End the iteration if no manifest is found
+                    if (manifestFiles.Length == 0) { continue; }
                     string manifestText;
                     using (StreamReader sr = manifestFiles[0].OpenText())
                     {
                         manifestText = sr.ReadToEnd();
                     }
                     PackInfo entry = Newtonsoft.Json.JsonConvert.DeserializeObject<PackInfo>(manifestText);
+                    entry.Directory = item.FullName;
+                    entry.Index = itemIndex;
 
+                    // If the pack utilizes lang files, grab the name/desc from the lang file
                     if (entry.header.name == "pack.name")
                     {
                         DirectoryInfo langDir = new DirectoryInfo(item.FullName + "\\texts");
                         FileInfo[] langFiles = langDir.GetFiles("en_US.lang");
 
-                        string[] langLine;
-                        using (StreamReader sr = langFiles[0].OpenText())
+                        // Make sure the lang file exists
+                        if (langFiles.Length != 0)
                         {
-                            string[] stringSeparators = new string[] { "=" };
-                            while (sr.EndOfStream == false)
+                            string[] langLine;
+
+                            using (StreamReader sr = langFiles[0].OpenText())
                             {
-                                langLine = sr.ReadLine().Split(stringSeparators, StringSplitOptions.None);
-                                if (langLine[0] == "pack.name" && langLine.Length > 1)
+                                string[] stringSeparators = new string[] { "=" };
+                                while (sr.EndOfStream == false)
                                 {
-                                    entry.header.name = langLine[1];
-                                }
-                                if (langLine[0] == "pack.description" && langLine.Length > 1)
-                                {
-                                    entry.header.description = langLine[1];
+                                    langLine = sr.ReadLine().Split(stringSeparators, StringSplitOptions.None);
+                                    if (langLine[0] == "pack.name" && langLine.Length > 1)
+                                    {
+                                        entry.header.name = langLine[1];
+                                    }
+                                    if (langLine[0] == "pack.description" && langLine.Length > 1)
+                                    {
+                                        entry.header.description = langLine[1];
+                                    }
                                 }
                             }
                         }
+                        
                     }
 
-                    entries.Add(entry);                    
+                    entries.Add(entry);
+                    itemIndex++;
                 }
             }
             catch (DirectoryNotFoundException e)
@@ -154,42 +167,39 @@ namespace packmule.Models
             }
         }
 
-        private void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        private void DetectWorlds(ObservableCollection<PackInfo> entries, string directoryPath)
         {
-            throw new NotImplementedException();
-            //https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=netframework-4.8
-            if (source.FullName.ToLower() == target.FullName.ToLower())
+            DirectoryInfo directory = new DirectoryInfo(directoryPath);
+            try
             {
+                // Get array of directories in the development folder
+                DirectoryInfo[] packDirs = directory.GetDirectories();
+
+                // Itterate through folders looking for worlds
+                foreach (DirectoryInfo item in packDirs)
+                {
+                    // Read filename.txt
+                    FileInfo[] manifestFiles = item.GetFiles("levelname.txt");
+                    // End the iteration if no levelname is found
+                    if (manifestFiles.Length == 0) { continue; }
+                    string fileNameText;
+                    using (StreamReader sr = manifestFiles[0].OpenText())
+                    {
+                        fileNameText = sr.ReadToEnd();
+                    }
+                    PackInfo entry = new PackInfo();
+                    entry.header.name = fileNameText;
+                    entry.Directory = item.FullName;
+
+                    entries.Add(entry);
+                }
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
                 return;
             }
-
-            // Check if the target directory exists, if not, create it.
-            if (Directory.Exists(target.FullName) == false)
-            {
-                Directory.CreateDirectory(target.FullName);
-            }
-
-            // Copy each file into it's new directory.
-            foreach (FileInfo fi in source.GetFiles())
-            {
-                Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
-                fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
-            }
-
-            // Copy each subdirectory using recursion.
-            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
-            {
-                DirectoryInfo nextTargetSubDir =
-                    target.CreateSubdirectory(diSourceSubDir.Name);
-                CopyAll(diSourceSubDir, nextTargetSubDir);
-            }
         }
-
-        private void DeletePack(string deletionPath)
-        {
-            throw new NotImplementedException();
-        }
-
         #region Property Changed Event
         // Property Changed Event
         public event PropertyChangedEventHandler PropertyChanged;
