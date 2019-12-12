@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DeleteConverter.cs" />
     <Compile Include="Views\PackInfo.xaml.cs">
       <DependentUpon>PackInfo.xaml</DependentUpon>
     </Compile>

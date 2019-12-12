@@ -7,7 +7,10 @@
              xmlns:pm="clr-namespace:packmule"
              mc:Ignorable="d" 
              d:DesignHeight="60" d:DesignWidth="300">
-    <Grid VerticalAlignment="Top" Height="59" Margin="0" >
+    <UserControl.Resources>
+        <pm:DeleteConverter x:Key="DeleteConverter" />
+    </UserControl.Resources>
+    <Grid VerticalAlignment="Top" Height="59" Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="37*"/>
             <RowDefinition Height="22*"/>
@@ -17,7 +20,14 @@
             <ColumnDefinition Width="10*" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button Command="{x:Static pm:MainWindow.DeletePackCmd}" CommandParameter="{Binding Path=Index}" Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="#FFDC3434"/>
+        <Button Command="{x:Static pm:MainWindow.DeletePackCmd}" Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="#FFDC3434">
+            <Button.CommandParameter>
+                <MultiBinding Converter="{StaticResource DeleteConverter}">
+                    <Binding Path="Index"/>
+                    <Binding Path="Index"/>
+                </MultiBinding>
+            </Button.CommandParameter>
+        </Button>
         <!--<Button Command="{x:Static pm:MainWindow.DeletePackCmd}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=SelectedIndex}" Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="#FFDC3434"/>-->
         <TextBlock Text="{Binding header.name}" Grid.Column="1" VerticalAlignment="Top" Margin="10,10,10,0" Height="16"/>
         <TextBlock Text="{Binding header.description}" Grid.Column="1" VerticalAlignment="Top" Margin="10,0" Height="16" Grid.Row="1"/>

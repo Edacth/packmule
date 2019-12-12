@@ -106,8 +106,8 @@ namespace packmule
             {
                 try
                 {
-                    int index = (int)(e.Parameter as int?);
-                    Console.WriteLine("I'mma delete " + index);
+                    var values = (int[])(e.Parameter);
+                    Console.WriteLine("I'mma delete " + values[0]);
                 }
                 catch (Exception ex)
                 {
