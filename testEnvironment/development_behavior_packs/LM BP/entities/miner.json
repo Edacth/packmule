@@ -1,0 +1,156 @@
+//bridge-file-version: #35
+{
+	"format_version": "1.12.0",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "lm:miner",
+			"is_spawnable": true,
+			"is_summonable": true
+		},
+		"component_groups": {
+			"lm:seek_mine": {
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 1,
+					"must_reach": false,
+					"entity_types": [
+						{
+							"filters": {
+								"all_of": [
+									{
+										"test": "is_family",
+										"value": "mine",
+										"subject": "other"
+									}
+								]
+							}
+						}
+					]
+				},
+				"minecraft:follow_range": {
+					"value": 8
+				},
+				"minecraft:attack": {
+					"damage": 0
+				},
+				"minecraft:behavior.delayed_attack": {
+					"priority": 0
+				}
+			},
+			"lm:seek_base": {
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 1,
+					"must_reach": false,
+					"entity_types": [
+						{
+							"filters": {
+								"all_of": [
+									{
+										"test": "is_family",
+										"value": "base",
+										"subject": "other"
+									}
+								]
+							}
+						}
+					]
+				},
+				"minecraft:follow_range": {
+					"value": 8
+				},
+				"minecraft:attack": {
+					"damage": 0
+				},
+				"minecraft:behavior.delayed_attack": {
+					"priority": 0
+				}
+			}
+		},
+		"components": {
+			"minecraft:scheduler": {
+				"scheduled_events": [
+					{
+						"scheduled_event": {
+							"filters": {
+								"all_of": [
+									{
+										"test": "has_tag",
+										"operator": "==",
+										"value": "seek_base"
+									}
+								]
+							},
+							"event": "lm:to_seek_base",
+							"target": "self"
+						}
+					},
+					{
+						"scheduled_event": {
+							"filters": {
+								"all_of": [
+									{
+										"test": "has_tag",
+										"operator": "==",
+										"value": "seek_mine"
+									}
+								]
+							},
+							"event": "ln:to_seek_mine",
+							"target": "self"
+						}
+					}
+				]
+			},
+			"minecraft:type_family": {
+				"family": [
+					"miner"
+				]
+			},
+			"minecraft:movement.generic": [],
+			"minecraft:navigation.walk": {
+				"avoid_water": true
+			},
+			"minecraft:movement": {
+				"value": 0.2
+			},
+			"minecraft:health": {
+				"value": 1
+			},
+			"minecraft:jump.static": [],
+			"minecraft:is_baby": [],
+			"minecraft:equipment": {
+				"table": "loot_tables/miner_equipment.json"
+			},
+			"minecraft:physics": [],
+			"minecraft:scale": {
+				"value": 0.5
+			}
+		},
+		"events": {
+			"lm:to_seek_base": {
+				"add": {
+					"component_groups": [
+						"lm:seek_base",
+						[]
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"lm:seek_mine"
+					]
+				}
+			},
+			"ln:to_seek_mine": {
+				"add": {
+					"component_groups": [
+						"lm:seek_mine"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"lm:seek_base"
+					]
+				}
+			}
+		}
+	}
+}
