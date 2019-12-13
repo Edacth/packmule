@@ -66,6 +66,7 @@
     </ApplicationDefinition>
     <Compile Include="DeleteConverter.cs" />
     <Compile Include="Models\PackHubSerialize.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Views\PackInfo.xaml.cs">
       <DependentUpon>PackInfo.xaml</DependentUpon>
     </Compile>

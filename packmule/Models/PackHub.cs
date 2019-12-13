@@ -85,20 +85,38 @@ namespace packmule.Models
         public int BackupTarget { get => _backupTarget; set => SetProperty(ref _backupTarget, value); }
         #endregion
         FileSystemWatcher watcher = new FileSystemWatcher();
-        private string defaultDirectory;
+        
 
-        public PackHub(int _Id):this(_Id, new Thickness(0, 0, 0, 0))
+        // Partial Constructor
+        public PackHub(int _Id, System.Windows.Thickness _Position, string _BaseDirectory) 
+                       :this(_Id, _Position, "", 0, _BaseDirectory, 0, false, 0)
         {
         }
 
-        public PackHub(int _Id, System.Windows.Thickness _Position)
+        // PackHubSerialize Constructor
+        public PackHub(PackHubSerialize PHS):this(PHS.Id, PHS.Position, PHS.Title,
+                       PHS.StructureType, PHS.BaseDirectory, PHS.CopyTarget,
+                       PHS.BackupEnabled, PHS.BackupTarget)
         {
+        }
+
+        // Full Constructor
+        public PackHub(int _Id, System.Windows.Thickness _Position, string _Title,
+                       int _StructureType, string _BaseDirectory, int _CopyTarget,
+                       bool _BackupEnabled, int _BackupTarget)
+        {
+            
+
             Position = _Position;
             Id = _Id;
-            Title = "Pack Hub: " + Id;
+            Title = (_Title == "") ? "Pack Hub: " + Id : _Title;
+            StructureType = _StructureType;
+            BaseDirectory = _BaseDirectory;
+            CopyTarget = _CopyTarget;
+            BackupEnabled = _BackupEnabled;
+            BackupTarget = _BackupTarget;
 
-            defaultDirectory = @"C:\Users\s189062\Desktop\packmule\testEnvironment";
-            BaseDirectory = defaultDirectory == null ? System.IO.Directory.GetCurrentDirectory() : defaultDirectory;
+            
 
             #region FileSystemWatcher
             // https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=netframework-4.8

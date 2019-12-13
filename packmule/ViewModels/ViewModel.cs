@@ -11,6 +11,7 @@ using System.IO;
 using Newtonsoft;
 
 using Thickness = System.Windows.Thickness;
+using Newtonsoft.Json;
 
 namespace packmule.ViewModels
 {
@@ -33,9 +34,21 @@ namespace packmule.ViewModels
         private bool _draggingEnabled;
         public bool DraggingEnabled { get => _draggingEnabled; set => SetProperty(ref _draggingEnabled, value); }
         #endregion
+        #region SaveLayoutOnClose
+        private bool _saveLayoutOnClose;
+        public bool SaveLayoutOnClose { get => _saveLayoutOnClose; set => SetProperty(ref _saveLayoutOnClose, value); }
+        #endregion
+        #region LoadLayoutOnStart
+        private bool _loadLayoutOnStart;
+        public bool LoadLayoutOnStart { get => _loadLayoutOnStart; set => SetProperty(ref _loadLayoutOnStart, value); }
+        #endregion
         #region StructurePaths
         static ObservableCollection<DirectoryStructure> _structurePaths = new ObservableCollection<DirectoryStructure>();
         public static ObservableCollection<DirectoryStructure> StructurePaths { get => _structurePaths; }
+        #endregion
+        #region DefaultDirectory
+        private string _defaultDirectory;
+        public string DefaultDirectory { get => _defaultDirectory; set => SetProperty(ref _defaultDirectory, value); }
         #endregion
 
         public ViewModel()
@@ -45,11 +58,17 @@ namespace packmule.ViewModels
             StructurePaths.Add(new DirectoryStructure("Short Hand", "behavior", "resource", "worlds"));
 
             // TODO: Populate packhubs from file
+            LoadLayout();
+            if (DefaultDirectory == null)
+            {
+                DefaultDirectory = System.IO.Directory.GetCurrentDirectory();
+            }
+            
         }
 
         public void CreatePackHub()
         {
-            PackHubs.Add(new PackHub(PackHubs.Count, new Thickness(450 * PackHubs.Count, 0, 0, 0)));
+            PackHubs.Add(new PackHub(PackHubs.Count, new Thickness(450 * PackHubs.Count, 0, 0, 0), DefaultDirectory));
         }
 
         public void CopyPack(int sourceId, int packIndex, int destinationId )
@@ -112,60 +131,62 @@ namespace packmule.ViewModels
             PackHubs[id].Position = newPos;
         }
 
+        private void SaveSettings()
+        {
+            // TODO: Separate the settings and layout files
+            throw new NotImplementedException();
+        }
+
         public void SaveLayout()
         {
-            string output = "";
+            // Encapsulate settings
+            Settings settings = new Settings();
+            settings.SaveLayoutOnClose = SaveLayoutOnClose;
+            settings.LoadLayoutOnStart = LoadLayoutOnStart;
+            settings.DefaultDirectory = DefaultDirectory;
+            settings.PHSerializes = new PackHubSerialize[PackHubs.Count];
             for (int i = 0; i < PackHubs.Count; i++)
             {
-                // TODO: Put this in a constructor or a cast
-                PackHubSerialize serializeObj = new PackHubSerialize();
-                serializeObj.Id = PackHubs[i].Id;
-                serializeObj.Position = PackHubs[i].Position;
-                serializeObj.Title = PackHubs[i].Title;
-                serializeObj.StructureType = PackHubs[i].StructureType;
-                serializeObj.BaseDirectory = PackHubs[i].BaseDirectory;
-                serializeObj.CopyTarget = PackHubs[i].CopyTarget;
-                serializeObj.BackupEnabled = PackHubs[i].BackupEnabled;
-                serializeObj.BackupTarget = PackHubs[i].BackupTarget;
+                PackHubSerialize serializeObj = new PackHubSerialize(PackHubs[i]);
 
-                output += Newtonsoft.Json.JsonConvert.SerializeObject(serializeObj);
-                if (i < PackHubs.Count - 1)
-                {
-                    output += ",\n";
-                }
+                settings.PHSerializes[i] = serializeObj;
             }
+
+            // Serialize
+            string output = Newtonsoft.Json.JsonConvert.SerializeObject(settings);
             File.WriteAllText(System.IO.Path.GetFullPath(".") + "\\settings.txt", output);
+        }
+
+        private void LoadSettings()
+        {
+            throw new NotImplementedException();
         }
 
         public void LoadLayout()
         {
-            // TODO: Make this work. I'm a bit lost on how to parse multiple boys
+            // Read settings file
             FileInfo settingsFile = new FileInfo(System.IO.Path.GetFullPath(".") + "\\settings.txt");
             string settingsText;
-
             using (StreamReader sr = settingsFile.OpenText())
             {
-                settingsText = sr.ReadToEnd();
-                var reader = new Newtonsoft.Json.JsonTextReader(new StringReader(settingsText));
-                reader.SupportMultipleContent = true;
-                var serializer = new Newtonsoft.Json.JsonSerializer();
+                settingsText = @sr.ReadToEnd();
+            }
+            
+            // Deserialize
+            Settings settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(settingsText);
 
-                while (reader.Read())
+            // Apply settings
+            SaveLayoutOnClose = settings.SaveLayoutOnClose;
+            LoadLayoutOnStart = settings.LoadLayoutOnStart;
+            DefaultDirectory = settings.DefaultDirectory;
+            if (LoadLayoutOnStart && settings.PHSerializes.Length > 0)
+            {
+                PackHubs.Clear();
+                for (int i = 0; i < settings.PHSerializes.Length; i++)
                 {
-                    try
-                    {
-                        var message = serializer.Deserialize<string>(reader);
-                        Console.WriteLine("Got message: {0}", message);
-                    }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception.Message);
-                    }
+                    PackHubs.Add(new PackHub(settings.PHSerializes[i]));
                 }
             }
-            //PackHubSerialize PHSerialize = Newtonsoft.Json.JsonConvert.DeserializeObject<PackHubSerialize>(settingsText);
-
-            
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace packmule.Models
 {
-    class PackHubSerialize
+    public class PackHubSerialize
     {
         public int Id { get; set; }
         public Thickness Position { get; set; }
@@ -18,5 +18,20 @@ namespace packmule.Models
         public bool BackupEnabled { get; set; }
         public int BackupTarget { get; set; }
 
+        public PackHubSerialize()
+        {
+        }
+
+        public PackHubSerialize(PackHub packHub)
+        {
+            Id = packHub.Id;
+            Position = packHub.Position;
+            Title = packHub.Title;
+            StructureType = packHub.StructureType;
+            BaseDirectory = packHub.BaseDirectory;
+            CopyTarget = packHub.CopyTarget;
+            BackupEnabled = packHub.BackupEnabled;
+            BackupTarget = packHub.BackupTarget;
+        }
     }
 }
