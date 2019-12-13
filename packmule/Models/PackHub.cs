@@ -19,9 +19,9 @@ namespace packmule.Models
         private string _title;
         public string Title { get => _title; set => SetProperty(ref _title, value); }
         #endregion
-        #region ID
+        #region Id
         private int _id;
-        public int ID { get => _id; set => SetProperty(ref _id, value); }
+        public int Id { get => _id; set => SetProperty(ref _id, value); }
         #endregion
         #region Position
         private Thickness _position;
@@ -76,6 +76,10 @@ namespace packmule.Models
         private int _copyTarget;
         public int CopyTarget { get => _copyTarget; set => SetProperty(ref _copyTarget, value); }
         #endregion
+        #region BackupEnabled
+        private bool _backupEnabled;
+        public bool BackupEnabled { get => _backupEnabled; set => SetProperty(ref _backupEnabled, value); }
+        #endregion
         #region BackupTarget
         private int _backupTarget;
         public int BackupTarget { get => _backupTarget; set => SetProperty(ref _backupTarget, value); }
@@ -83,15 +87,15 @@ namespace packmule.Models
         FileSystemWatcher watcher = new FileSystemWatcher();
         private string defaultDirectory;
 
-        public PackHub(int _ID):this(_ID, new Thickness(0, 0, 0, 0))
+        public PackHub(int _Id):this(_Id, new Thickness(0, 0, 0, 0))
         {
         }
 
-        public PackHub(int _ID, System.Windows.Thickness _Position)
+        public PackHub(int _Id, System.Windows.Thickness _Position)
         {
             Position = _Position;
-            ID = _ID;
-            Title = "Pack Hub: " + ID;
+            Id = _Id;
+            Title = "Pack Hub: " + Id;
 
             defaultDirectory = @"C:\Users\s189062\Desktop\packmule\testEnvironment";
             BaseDirectory = defaultDirectory == null ? System.IO.Directory.GetCurrentDirectory() : defaultDirectory;

@@ -28,6 +28,8 @@ namespace packmule
         public static RoutedCommand PHSetPositionCmd = new RoutedCommand();
         public static RoutedCommand PHTranslateCmd = new RoutedCommand();
         public static RoutedCommand SetSelectedPHCmd = new RoutedCommand();
+        public static RoutedCommand SaveLayoutCmd = new RoutedCommand();
+        public static RoutedCommand LoadLayoutCmd = new RoutedCommand();
 
         private Point dragStartPoint;
 
@@ -43,6 +45,8 @@ namespace packmule
             CommandBinding PHSetPositionCmdBinding = new CommandBinding(PHSetPositionCmd, PHSetPositionCmdExecuted, PHSetPositionCanExecute);
             CommandBinding PHTranslateCmdBinding = new CommandBinding(PHTranslateCmd, PHTranslateCmdExecuted, PHTranslateCmdCanExecute);
             CommandBinding SetSelectedPHCmdBinding = new CommandBinding(SetSelectedPHCmd, SetSelectedPHCmdExecuted, SetSelectedPHCmdCanExecute);
+            CommandBinding SaveLayoutCmdBinding = new CommandBinding(SaveLayoutCmd, SaveLayoutCmdExecuted, SaveLayoutCmdCanExecute);
+            CommandBinding LoadLayoutCmdBinding = new CommandBinding(LoadLayoutCmd, LoadLayoutCmdExecuted, LoadLayoutCmdCanExecute);
 
             // Attach CommandBindings to root window
             this.CommandBindings.Add(deletePackCmdBinding);
@@ -51,6 +55,8 @@ namespace packmule
             this.CommandBindings.Add(PHSetPositionCmdBinding);
             this.CommandBindings.Add(PHTranslateCmdBinding);
             this.CommandBindings.Add(SetSelectedPHCmdBinding);
+            this.CommandBindings.Add(SaveLayoutCmdBinding);
+            this.CommandBindings.Add(LoadLayoutCmdBinding);
             //viewModel.OnPropertyChanged(nameof(viewModel.Title));
 
             InitializeComponent();
@@ -231,6 +237,28 @@ namespace packmule
         }
 
         private void SetSelectedPHCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
+        #region SaveLayoutCmd
+        private void SaveLayoutCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            viewModel.SaveLayout();
+        }
+
+        private void SaveLayoutCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
+        #region LoadLayoutCmd
+        private void LoadLayoutCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            viewModel.LoadLayout();
+        }
+
+        private void LoadLayoutCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }

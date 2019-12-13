@@ -50,7 +50,7 @@ namespace packmule
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            RaiseEvent( new DragEventArgs(SetDragStartPointEvent, (DataContext as packmule.Models.PackHub).ID, e));
+            RaiseEvent( new DragEventArgs(SetDragStartPointEvent, (DataContext as packmule.Models.PackHub).Id, e));
             //Console.WriteLine("LeftButtonDown");
         }
 

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using packmule.Models;
 using System.IO;
+using Newtonsoft;
 
 using Thickness = System.Windows.Thickness;
 
@@ -42,6 +43,8 @@ namespace packmule.ViewModels
             // TODO: Have this read from a config file and populate StructurePaths that way
             StructurePaths.Add(new DirectoryStructure("ComMojang", "development_behavior_packs", "development_resource_packs", "minecraftWorlds"));
             StructurePaths.Add(new DirectoryStructure("Short Hand", "behavior", "resource", "worlds"));
+
+            // TODO: Populate packhubs from file
         }
 
         public void CreatePackHub()
@@ -107,6 +110,62 @@ namespace packmule.ViewModels
                                              currentPos.Right + translationAmount.Right,
                                              currentPos.Bottom + translationAmount.Bottom);
             PackHubs[id].Position = newPos;
+        }
+
+        public void SaveLayout()
+        {
+            string output = "";
+            for (int i = 0; i < PackHubs.Count; i++)
+            {
+                // TODO: Put this in a constructor or a cast
+                PackHubSerialize serializeObj = new PackHubSerialize();
+                serializeObj.Id = PackHubs[i].Id;
+                serializeObj.Position = PackHubs[i].Position;
+                serializeObj.Title = PackHubs[i].Title;
+                serializeObj.StructureType = PackHubs[i].StructureType;
+                serializeObj.BaseDirectory = PackHubs[i].BaseDirectory;
+                serializeObj.CopyTarget = PackHubs[i].CopyTarget;
+                serializeObj.BackupEnabled = PackHubs[i].BackupEnabled;
+                serializeObj.BackupTarget = PackHubs[i].BackupTarget;
+
+                output += Newtonsoft.Json.JsonConvert.SerializeObject(serializeObj);
+                if (i < PackHubs.Count - 1)
+                {
+                    output += ",\n";
+                }
+            }
+            File.WriteAllText(System.IO.Path.GetFullPath(".") + "\\settings.txt", output);
+        }
+
+        public void LoadLayout()
+        {
+            // TODO: Make this work. I'm a bit lost on how to parse multiple boys
+            FileInfo settingsFile = new FileInfo(System.IO.Path.GetFullPath(".") + "\\settings.txt");
+            string settingsText;
+
+            using (StreamReader sr = settingsFile.OpenText())
+            {
+                settingsText = sr.ReadToEnd();
+                var reader = new Newtonsoft.Json.JsonTextReader(new StringReader(settingsText));
+                reader.SupportMultipleContent = true;
+                var serializer = new Newtonsoft.Json.JsonSerializer();
+
+                while (reader.Read())
+                {
+                    try
+                    {
+                        var message = serializer.Deserialize<string>(reader);
+                        Console.WriteLine("Got message: {0}", message);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
+                }
+            }
+            //PackHubSerialize PHSerialize = Newtonsoft.Json.JsonConvert.DeserializeObject<PackHubSerialize>(settingsText);
+
+            
         }
     }
 }
