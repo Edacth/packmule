@@ -1,0 +1,155 @@
+//bridge-file-version: #26
+{
+	"format_version": "1.12.0",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "lm:soldier",
+			"is_spawnable": true,
+			"is_summonable": true
+		},
+		"component_groups": {
+			"lm:blue_soldier": {
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 1,
+					"must_reach": false,
+					"entity_types": [
+						{
+							"filters": {
+								"all_of": [
+									{
+										"test": "is_family",
+										"value": "red",
+										"subject": "other"
+									}
+								]
+							}
+						}
+					]
+				},
+				"minecraft:follow_range": {
+					"value": 8
+				},
+				"minecraft:attack": {
+					"damage": 0
+				},
+				"minecraft:scale": {
+					"value": 0.5
+				},
+				"minecraft:type_family": {
+					"family": [
+						"blue",
+						"solder"
+					]
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 0
+				},
+				"minecraft:equipment": {
+					"table": "loot_tables/blue_soldier_equipment.json"
+				}
+			},
+			"lm:red_soldier": {
+				"minecraft:behavior.nearest_attackable_target": {
+					"priority": 1,
+					"must_reach": false,
+					"entity_types": [
+						{
+							"filters": {
+								"all_of": [
+									{
+										"test": "is_family",
+										"value": "blue",
+										"subject": "other"
+									}
+								]
+							}
+						}
+					]
+				},
+				"minecraft:follow_range": {
+					"value": 8
+				},
+				"minecraft:attack": {
+					"damage": 0
+				},
+				"minecraft:type_family": {
+					"family": [
+						"red",
+						"soldier"
+					]
+				},
+				"minecraft:behavior.melee_attack": {
+					"priority": 0
+				},
+				"minecraft:equipment": {
+					"table": "loot_tables/red_soldier_equipment.json"
+				}
+			}
+		},
+		"components": {
+			"minecraft:scheduler": [],
+			"minecraft:movement.generic": [],
+			"minecraft:navigation.walk": {
+				"avoid_water": true
+			},
+			"minecraft:movement": {
+				"value": 0.2
+			},
+			"minecraft:health": {
+				"value": 1
+			},
+			"minecraft:jump.static": [],
+			"minecraft:is_baby": [],
+			"minecraft:physics": [],
+			"minecraft:scale": {
+				"value": 0.5
+			},
+			"minecraft:collision_box": {
+				"width": 1,
+				"height": 1
+			},
+			"minecraft:knockback_resistance": {
+				"value": 2
+			},
+			"minecraft:push_through": {
+				"value": 1
+			}
+		},
+		"events": {
+			"minecraft:entity_spawned": {
+				"randomize": [
+					{
+						"add": {
+							"component_groups": [
+								"lm:blue_soldier"
+							]
+						},
+						"weight": 1
+					},
+					{
+						"add": {
+							"component_groups": [
+								"lm:red_soldier"
+							]
+						},
+						"weight": 1
+					}
+				]
+			},
+			"lm:add_red_soldier": {
+				"add": {
+					"component_groups": [
+						"lm:red_soldier"
+					]
+				}
+			},
+			"lm:add_blue_soldier": {
+				"add": {
+					"component_groups": [
+						"lm:blue_soldier"
+					]
+				}
+			}
+		}
+	}
+}

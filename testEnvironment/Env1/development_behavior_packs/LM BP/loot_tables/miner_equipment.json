@@ -1,0 +1,15 @@
+//bridge-file-version: #18
+{
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "item",
+					"name": "minecraft:iron_pickaxe",
+					"weight": 1
+				}
+			]
+		}
+	]
+}

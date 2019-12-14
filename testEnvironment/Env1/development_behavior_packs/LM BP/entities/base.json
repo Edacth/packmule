@@ -1,0 +1,72 @@
+//bridge-file-version: #21
+{
+	"format_version": "1.12.0",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "lm:base",
+			"is_spawnable": true,
+			"is_summonable": true
+		},
+		"component_groups": {
+			"lm:blue_base": {
+				"minecraft:type_family": {
+					"family": [
+						"blue",
+						"base"
+					]
+				},
+				"minecraft:variant": {
+					"value": 4
+				}
+			},
+			"lm:red_base": {
+				"minecraft:type_family": {
+					"family": [
+						"red",
+						"base"
+					]
+				},
+				"minecraft:variant": {
+					"value": 1
+				}
+			}
+		},
+		"components": {
+			"minecraft:type_family": {
+				"family": [
+					"base"
+				]
+			},
+			"minecraft:health": {
+				"value": 1
+			},
+			"minecraft:physics": [],
+			"minecraft:collision_box": {
+				"width": 1,
+				"height": 1
+			},
+			"minecraft:push_through": {
+				"value": 1
+			},
+			"minecraft:knockback_resistance": {
+				"value": 2
+			}
+		},
+		"events": {
+			"lm:add_blue_base": {
+				"add": {
+					"component_groups": [
+						"lm:blue_base"
+					]
+				}
+			},
+			"lm:add_red_base": {
+				"add": {
+					"component_groups": [
+						"lm:red_base"
+					]
+				}
+			}
+		}
+	}
+}
