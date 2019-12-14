@@ -36,12 +36,20 @@ namespace packmule.Models
             {
                 if (SetProperty(ref _baseDirectory, value))
                 {
-                    DirectoryInfo DirInfo = new DirectoryInfo(value);
-                    if (DirInfo.Exists)
+                    try
                     {
-                    watcher.Path = value;
+                        DirectoryInfo DirInfo = new DirectoryInfo(value);
+                        if (DirInfo.Exists)
+                        {
+                            watcher.Path = value;
+                        }
+                        PopulateLists();
                     }
-                    PopulateLists();
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("The process failed: {0}", e.ToString());
+                    }
+
                 }
             }
         }
@@ -116,7 +124,6 @@ namespace packmule.Models
             BackupEnabled = _BackupEnabled;
             BackupTarget = _BackupTarget;
 
-            
 
             #region FileSystemWatcher
             // https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=netframework-4.8

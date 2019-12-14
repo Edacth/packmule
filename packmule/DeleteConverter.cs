@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace packmule
 {
-    public class DeleteConverter : IMultiValueConverter
+    public class DefaultConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

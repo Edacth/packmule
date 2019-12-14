@@ -22,6 +22,7 @@ namespace packmule
     {
         ViewModels.ViewModel viewModel = new ViewModels.ViewModel();
 
+        public static RoutedCommand CopyPackCmd = new RoutedCommand();
         public static RoutedCommand DeletePackCmd = new RoutedCommand();
         public static RoutedCommand ChangeTitleCmd = new RoutedCommand();
         public static RoutedCommand CreatePackHubCmd = new RoutedCommand();
@@ -30,6 +31,7 @@ namespace packmule
         public static RoutedCommand SetSelectedPHCmd = new RoutedCommand();
         public static RoutedCommand SaveLayoutCmd = new RoutedCommand();
         public static RoutedCommand LoadLayoutCmd = new RoutedCommand();
+        public static RoutedCommand SavePrefsCmd = new RoutedCommand();
 
         private Point dragStartPoint;
 
@@ -39,6 +41,7 @@ namespace packmule
             DataContext = viewModel;
 
             // Create command bindings
+            CommandBinding copyPackCmdBinding = new CommandBinding(CopyPackCmd, CopyPackCmdExecuted, CopyPackCmdCanExecute);
             CommandBinding deletePackCmdBinding = new CommandBinding(DeletePackCmd, DeletePackCmdExecuted, DeletePackCmdCanExecute);
             CommandBinding changeTitleCmdBinding = new CommandBinding(ChangeTitleCmd, ChangeTitleCmdExecuted, ChangeTitleCmdCanExecute);
             CommandBinding createPackHubCmdBinding = new CommandBinding(CreatePackHubCmd, CreatePackHubCmdExecuted, CreatePackHubCanExecute);
@@ -47,8 +50,10 @@ namespace packmule
             CommandBinding SetSelectedPHCmdBinding = new CommandBinding(SetSelectedPHCmd, SetSelectedPHCmdExecuted, SetSelectedPHCmdCanExecute);
             CommandBinding SaveLayoutCmdBinding = new CommandBinding(SaveLayoutCmd, SaveLayoutCmdExecuted, SaveLayoutCmdCanExecute);
             CommandBinding LoadLayoutCmdBinding = new CommandBinding(LoadLayoutCmd, LoadLayoutCmdExecuted, LoadLayoutCmdCanExecute);
+            CommandBinding SavePrefsCmdBinding = new CommandBinding(SavePrefsCmd, SavePrefsCmdExecuted, SavePrefsCmdCanExecute);
 
             // Attach CommandBindings to root window
+            this.CommandBindings.Add(copyPackCmdBinding);
             this.CommandBindings.Add(deletePackCmdBinding);
             this.CommandBindings.Add(changeTitleCmdBinding);
             this.CommandBindings.Add(createPackHubCmdBinding);
@@ -57,6 +62,7 @@ namespace packmule
             this.CommandBindings.Add(SetSelectedPHCmdBinding);
             this.CommandBindings.Add(SaveLayoutCmdBinding);
             this.CommandBindings.Add(LoadLayoutCmdBinding);
+            this.CommandBindings.Add(SavePrefsCmdBinding);
             //viewModel.OnPropertyChanged(nameof(viewModel.Title));
 
             InitializeComponent();
@@ -101,7 +107,34 @@ namespace packmule
             }
         }
         #endregion
+        #region CopyPackCmd
+        private void CopyPackCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            // JK I don't think I need additional parameters
+            if (e.Parameter != null)
+            {
+                try
+                {
+                    object[] parameters = (object[])e.Parameter;
+                    int index = (int)(parameters[0]);
+                    int packType = (int)(parameters[1]);
+                    int id = (int)(parameters[2]);
+                    int target = (int)(parameters[3]);
 
+                    viewModel.DeletePack(id, packType, index);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+        }
+
+        private void CopyPackCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
         #region DeletePackCmd
         private void DeletePackCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
@@ -259,6 +292,17 @@ namespace packmule
         }
 
         private void LoadLayoutCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+        #endregion
+        #region SavePrefsCmd
+        private void SavePrefsCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            viewModel.SaveSettings();
+        }
+
+        private void SavePrefsCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }

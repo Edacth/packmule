@@ -65,6 +65,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DeleteConverter.cs" />
+    <Compile Include="Models\Layout.cs" />
     <Compile Include="Models\PackHubSerialize.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Views\PackInfo.xaml.cs">
@@ -88,7 +89,6 @@
     </Compile>
     <Compile Include="Models\PackHub.cs" />
     <Compile Include="Models\PackInfo.cs" />
-    <Compile Include="Vector2.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

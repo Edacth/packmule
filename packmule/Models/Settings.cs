@@ -11,6 +11,5 @@ namespace packmule.Models
         public bool SaveLayoutOnClose { get; set; }
         public bool LoadLayoutOnStart { get; set; }
         public string DefaultDirectory { get; set; }
-        public PackHubSerialize[] PHSerializes { get; set; }
     }
 }

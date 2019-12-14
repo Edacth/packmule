@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown" PreviewMouseMove="OnPreviewMouseMove"
              d:DesignHeight="450" d:DesignWidth="450" Width="450" Height="500" Margin="{Binding Position}">
-
+    <
     <Grid Margin="0" VerticalAlignment="Top" Height="500" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,7 +23,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="10,5,0,1" FontSize="15" MaxLength="60" MaxLines="1" IsUndoEnabled="True" Background="#00000000" BorderBrush="#00000000"/>
-            <TextBlock Text="{Binding ID, Mode=OneWay, StringFormat=ID \{0\}, UpdateSourceTrigger=LostFocus}" Grid.Column="1" FontStretch="SemiExpanded" TextAlignment="Right" Margin="0,5,10,0" FontSize="14"/>
+            <TextBlock Text="{Binding Id, Mode=OneWay, StringFormat=ID \{0\}, UpdateSourceTrigger=LostFocus}" Grid.Column="1" FontStretch="SemiExpanded" TextAlignment="Right" Margin="0,5,10,0" FontSize="14"/>
         </Grid>
         <!-- Row 1-->
         <Canvas Background="#FFACC3F5" Grid.Row="1" Margin="0" Grid.RowSpan="2">
@@ -42,7 +42,7 @@
                     <ComboBox ItemsSource="{Binding DataContext.PackHubs, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding CopyTarget}" Width="50" Height="30" Margin="0,0,0,1" RenderTransformOrigin="0.06,0.467">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding ID}"/>
+                                <TextBlock Text="{Binding Id}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
@@ -51,11 +51,11 @@
 
             <GroupBox Header="Backup Target" Grid.Row="1" Height="53" Canvas.Left="263" Canvas.Top="386" Width="177">
                 <StackPanel Orientation="Horizontal">
-                    <CheckBox Content="Enabled" Margin="4,10,43,5" VerticalAlignment="Center" HorizontalAlignment="Center" Height="16"/>
-                    <ComboBox ItemsSource="{Binding DataContext.PackHubs, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding BackUpTarget}" Canvas.Left="386" Canvas.Top="347" Width="50" Height="30">
+                    <CheckBox IsChecked="{Binding BackupEnabled}" Content="Enabled" Margin="4,10,43,5" VerticalAlignment="Center" HorizontalAlignment="Center" Height="16"/>
+                    <ComboBox ItemsSource="{Binding DataContext.PackHubs, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding BackupTarget}" Canvas.Left="386" Canvas.Top="347" Width="50" Height="30">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding ID}"/>
+                                <TextBlock Text="{Binding Id}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>

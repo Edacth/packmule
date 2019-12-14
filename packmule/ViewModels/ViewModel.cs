@@ -58,12 +58,12 @@ namespace packmule.ViewModels
             StructurePaths.Add(new DirectoryStructure("Short Hand", "behavior", "resource", "worlds"));
 
             // TODO: Populate packhubs from file
-            LoadLayout();
-            if (DefaultDirectory == null)
+            LoadSettings();
+
+            if (LoadLayoutOnStart)
             {
-                DefaultDirectory = System.IO.Directory.GetCurrentDirectory();
-            }
-            
+                LoadLayout();
+            }           
         }
 
         public void CreatePackHub()
@@ -131,61 +131,97 @@ namespace packmule.ViewModels
             PackHubs[id].Position = newPos;
         }
 
-        private void SaveSettings()
+        public void SaveSettings()
         {
             // TODO: Separate the settings and layout files
-            throw new NotImplementedException();
-        }
-
-        public void SaveLayout()
-        {
             // Encapsulate settings
             Settings settings = new Settings();
             settings.SaveLayoutOnClose = SaveLayoutOnClose;
             settings.LoadLayoutOnStart = LoadLayoutOnStart;
             settings.DefaultDirectory = DefaultDirectory;
-            settings.PHSerializes = new PackHubSerialize[PackHubs.Count];
-            for (int i = 0; i < PackHubs.Count; i++)
-            {
-                PackHubSerialize serializeObj = new PackHubSerialize(PackHubs[i]);
-
-                settings.PHSerializes[i] = serializeObj;
-            }
 
             // Serialize
             string output = Newtonsoft.Json.JsonConvert.SerializeObject(settings);
             File.WriteAllText(System.IO.Path.GetFullPath(".") + "\\settings.txt", output);
         }
 
+        public void SaveLayout()
+        {
+            // Encapsulate layout
+            Layout layout = new Layout();
+            layout.PHSerializes = new PackHubSerialize[PackHubs.Count];
+            for (int i = 0; i < PackHubs.Count; i++)
+            {
+                PackHubSerialize serializeObj = new PackHubSerialize(PackHubs[i]);
+
+                layout.PHSerializes[i] = serializeObj;
+            }
+
+            // Serialize
+            string output = Newtonsoft.Json.JsonConvert.SerializeObject(layout);
+            File.WriteAllText(System.IO.Path.GetFullPath(".") + "\\layout.txt", output);
+        }
+
         private void LoadSettings()
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Read settings file
+                FileInfo settingsFile = new FileInfo(System.IO.Path.GetFullPath(".") + "\\settings.txt");
+                string settingsText;
+                using (StreamReader sr = settingsFile.OpenText())
+                {
+                    settingsText = @sr.ReadToEnd();
+                }
+
+                // Deserialize
+                Settings settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(settingsText);
+
+                // Apply settings
+                SaveLayoutOnClose = settings.SaveLayoutOnClose;
+                LoadLayoutOnStart = settings.LoadLayoutOnStart;
+                DefaultDirectory = settings.DefaultDirectory;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+                MessageBoxResult messageBox = MessageBox.Show("Packmule failed to load settings file. It will continue with default settings.", "Settings Failure", MessageBoxButton.OK);
+                SaveLayoutOnClose = true;
+                LoadLayoutOnStart = true;
+                DefaultDirectory = DefaultDirectory = System.IO.Directory.GetCurrentDirectory();
+            }
         }
 
         public void LoadLayout()
         {
-            // Read settings file
-            FileInfo settingsFile = new FileInfo(System.IO.Path.GetFullPath(".") + "\\settings.txt");
-            string settingsText;
-            using (StreamReader sr = settingsFile.OpenText())
+            try
             {
-                settingsText = @sr.ReadToEnd();
-            }
-            
-            // Deserialize
-            Settings settings = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings>(settingsText);
-
-            // Apply settings
-            SaveLayoutOnClose = settings.SaveLayoutOnClose;
-            LoadLayoutOnStart = settings.LoadLayoutOnStart;
-            DefaultDirectory = settings.DefaultDirectory;
-            if (LoadLayoutOnStart && settings.PHSerializes.Length > 0)
-            {
-                PackHubs.Clear();
-                for (int i = 0; i < settings.PHSerializes.Length; i++)
+                // Read layout file
+                FileInfo layoutFile = new FileInfo(System.IO.Path.GetFullPath(".") + "\\layout.txt");
+                string layoutText;
+                using (StreamReader sr = layoutFile.OpenText())
                 {
-                    PackHubs.Add(new PackHub(settings.PHSerializes[i]));
+                    layoutText = @sr.ReadToEnd();
                 }
+
+                // Deserialize
+                Layout layout = Newtonsoft.Json.JsonConvert.DeserializeObject<Layout>(layoutText);
+
+                // Apply layout
+                if (layout.PHSerializes.Length > 0)
+                {
+                    PackHubs.Clear();
+                    for (int i = 0; i < layout.PHSerializes.Length; i++)
+                    {
+                        PackHubs.Add(new PackHub(layout.PHSerializes[i]));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+                MessageBoxResult messageBox = MessageBox.Show("Packmule failed to load layout file. It will continue with an empty layout.", "Settings Failure", MessageBoxButton.OK);
+
             }
         }
     }
