@@ -71,17 +71,82 @@ namespace packmule.ViewModels
             PackHubs.Add(new PackHub(PackHubs.Count, new Thickness(450 * PackHubs.Count, 0, 0, 0), DefaultDirectory));
         }
 
-        public void CopyPack(int sourceId, int packIndex, int destinationId )
+        public void CopyPack(int sourceId, int packIndex)
         {
+            // TODO: Implement this function
+            DirectoryInfo source;
+            DirectoryInfo target;
+            int targetId = PackHubs[sourceId].CopyTarget;
+            switch (PackHubs[sourceId].SelectedPackType)
+            {
+                case 0:
+                    source = new DirectoryInfo(PackHubs[sourceId].BPEntries[packIndex].Directory);
+                    
+                    break;
+                case 1:
+                    throw new NotImplementedException();
+                    break;
+                case 2:
+                    throw new NotImplementedException();
+                    break;
+                default:
+                    break;
+            }
+
+            // Create target DirectoryInfo by appending baseDirectory and the correct structurePath
+            switch (PackHubs[targetId].SelectedPackType)
+            {
+                case 0:
+                    // I was here
+                    throw new NotImplementedException();
+                    // TODO Finish creating target directory info
+                    string structurePath = StructurePaths[PackHubs[targetId].StructureType].BPPath;
+                    target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + structurePath);
+                    break;
+                case 1:
+                    throw new NotImplementedException();
+                    break;
+                case 2:
+                    throw new NotImplementedException();
+                    break;
+                default:
+                    break;
+            }
+            
             throw new NotImplementedException();
         }
 
-        public void DeletePack(int id, int packType, int packIndex)
+        public void DeletePack(int id, int packIndex)
         {
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", "Deletion Confirmation", MessageBoxButton.YesNo);
             if (messageBoxResult != MessageBoxResult.Yes) { return; }
-            DirectoryInfo directory = new DirectoryInfo(PackHubs[id].BPEntries[packIndex].Directory);
-            directory.Delete(true);
+
+            try
+            {
+                DirectoryInfo directory;
+                switch (PackHubs[id].SelectedPackType)
+                {
+                    case 0:
+                        directory = new DirectoryInfo(PackHubs[id].BPEntries[packIndex].Directory);
+                        directory.Delete(true);
+                        break;
+                    case 1:
+                        directory = new DirectoryInfo(PackHubs[id].RPEntries[packIndex].Directory);
+                        directory.Delete(true);
+                        break;
+                    case 2:
+                        directory = new DirectoryInfo(PackHubs[id].WorldEntries[packIndex].Directory);
+                        directory.Delete(true);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void RecursiveCopy(DirectoryInfo source, DirectoryInfo target)

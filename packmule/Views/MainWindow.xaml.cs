@@ -117,11 +117,9 @@ namespace packmule
                 {
                     object[] parameters = (object[])e.Parameter;
                     int index = (int)(parameters[0]);
-                    int packType = (int)(parameters[1]);
-                    int id = (int)(parameters[2]);
-                    int target = (int)(parameters[3]);
+                    int id = (int)(parameters[1]);
 
-                    viewModel.DeletePack(id, packType, index);
+                    viewModel.CopyPack(id, index);
                 }
                 catch (Exception ex)
                 {
@@ -144,10 +142,9 @@ namespace packmule
                 {
                     object[] parameters = (object[])e.Parameter;
                     int index = (int)(parameters[0]);
-                    int packType = (int)(parameters[1]);
-                    int id = (int)(parameters[2]);
+                    int id = (int)(parameters[1]);
 
-                    viewModel.DeletePack(id, packType, index);
+                    viewModel.DeletePack(id, index);
                 }
                 catch (Exception ex)
                 {

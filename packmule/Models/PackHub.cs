@@ -67,6 +67,7 @@ namespace packmule.Models
         public ObservableCollection<PackInfo> WorldEntries { get => _worldEntries; }
         #endregion
         #region SelectedPackType
+        // Which tabControl item is selected. Behavior/Resource/Worlds
         private int _selectedPackType;
         public int SelectedPackType { get => _selectedPackType; set => SetProperty(ref _selectedPackType, value); }
         #endregion
@@ -234,6 +235,7 @@ namespace packmule.Models
             {
                 // Get array of directories in the development folder
                 DirectoryInfo[] packDirs = directory.GetDirectories();
+                int itemIndex = 0;
 
                 // Itterate through folders looking for worlds
                 foreach (DirectoryInfo item in packDirs)
@@ -250,8 +252,10 @@ namespace packmule.Models
                     PackInfo entry = new PackInfo();
                     entry.header.name = fileNameText;
                     entry.Directory = item.FullName;
+                    entry.Index = itemIndex;
 
                     entries.Add(entry);
+                    itemIndex++;
                 }
             }
             catch (DirectoryNotFoundException e)
