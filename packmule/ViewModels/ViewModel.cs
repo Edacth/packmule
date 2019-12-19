@@ -83,35 +83,35 @@ namespace packmule.ViewModels
                 {
                     case 0:
                         source = new DirectoryInfo(PackHubs[sourceId].BPEntries[packIndex].Directory);
-
                         break;
                     case 1:
-                        throw new NotImplementedException();
+                        source = new DirectoryInfo(PackHubs[sourceId].RPEntries[packIndex].Directory);
                         break;
                     case 2:
-                        throw new NotImplementedException();
+                        source = new DirectoryInfo(PackHubs[sourceId].WorldEntries[packIndex].Directory);
                         break;
                     default:
                         break;
                 }
 
                 // Create target DirectoryInfo by appending baseDirectory and the correct structurePath
-                switch (PackHubs[targetId].SelectedPackType)
+                string[] stringSeparators = new string[] { "\\" };
+                string[] separatedPath = source.FullName.Split(stringSeparators, StringSplitOptions.None);
+                string packName = separatedPath[separatedPath.Length - 1];
+                string structurePath = "";
+                switch (PackHubs[sourceId].SelectedPackType)
                 {
                     case 0:
-                        // TODO Finish creating target directory info
-                        string[] stringSeparators = new string[] { "\\" };
-                        string[] separatedPath = source.FullName.Split(stringSeparators, StringSplitOptions.None);
-                        string packName = separatedPath[separatedPath.Length - 1];
-
-                        string structurePath = StructurePaths[PackHubs[targetId].StructureType].BPPath;
+                        structurePath = StructurePaths[PackHubs[targetId].StructureType].BPPath;
                         target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
                         break;
                     case 1:
-                        throw new NotImplementedException();
+                        structurePath = StructurePaths[PackHubs[targetId].StructureType].RPPath;
+                        target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
                         break;
                     case 2:
-                        throw new NotImplementedException();
+                        structurePath = StructurePaths[PackHubs[targetId].StructureType].WorldPath;
+                        target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
                         break;
                     default:
                         break;
@@ -151,7 +151,6 @@ namespace packmule.ViewModels
                     default:
                         break;
                 }
-
             }
             catch (Exception ex)
             {
