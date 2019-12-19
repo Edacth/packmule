@@ -73,47 +73,56 @@ namespace packmule.ViewModels
 
         public void CopyPack(int sourceId, int packIndex)
         {
-            // TODO: Implement this function
-            DirectoryInfo source;
-            DirectoryInfo target;
-            int targetId = PackHubs[sourceId].CopyTarget;
-            switch (PackHubs[sourceId].SelectedPackType)
+            try
             {
-                case 0:
-                    source = new DirectoryInfo(PackHubs[sourceId].BPEntries[packIndex].Directory);
-                    
-                    break;
-                case 1:
-                    throw new NotImplementedException();
-                    break;
-                case 2:
-                    throw new NotImplementedException();
-                    break;
-                default:
-                    break;
-            }
+                DirectoryInfo source = new DirectoryInfo(@"C:\");
+                DirectoryInfo target = new DirectoryInfo(@"C:\");
+                int targetId = PackHubs[sourceId].CopyTarget;
+                // This is hardcoded for behavior/resource/worlds. Might make this modular in the future.
+                switch (PackHubs[sourceId].SelectedPackType)
+                {
+                    case 0:
+                        source = new DirectoryInfo(PackHubs[sourceId].BPEntries[packIndex].Directory);
 
-            // Create target DirectoryInfo by appending baseDirectory and the correct structurePath
-            switch (PackHubs[targetId].SelectedPackType)
-            {
-                case 0:
-                    // I was here
-                    throw new NotImplementedException();
-                    // TODO Finish creating target directory info
-                    string structurePath = StructurePaths[PackHubs[targetId].StructureType].BPPath;
-                    target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + structurePath);
-                    break;
-                case 1:
-                    throw new NotImplementedException();
-                    break;
-                case 2:
-                    throw new NotImplementedException();
-                    break;
-                default:
-                    break;
+                        break;
+                    case 1:
+                        throw new NotImplementedException();
+                        break;
+                    case 2:
+                        throw new NotImplementedException();
+                        break;
+                    default:
+                        break;
+                }
+
+                // Create target DirectoryInfo by appending baseDirectory and the correct structurePath
+                switch (PackHubs[targetId].SelectedPackType)
+                {
+                    case 0:
+                        // TODO Finish creating target directory info
+                        string[] stringSeparators = new string[] { "\\" };
+                        string[] separatedPath = source.FullName.Split(stringSeparators, StringSplitOptions.None);
+                        string packName = separatedPath[separatedPath.Length - 1];
+
+                        string structurePath = StructurePaths[PackHubs[targetId].StructureType].BPPath;
+                        target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                        break;
+                    case 1:
+                        throw new NotImplementedException();
+                        break;
+                    case 2:
+                        throw new NotImplementedException();
+                        break;
+                    default:
+                        break;
+                }
+
+                RecursiveCopy(source, target);
             }
-            
-            throw new NotImplementedException();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         public void DeletePack(int id, int packIndex)
@@ -124,6 +133,7 @@ namespace packmule.ViewModels
             try
             {
                 DirectoryInfo directory;
+                // This is hardcoded for behavior/resource/worlds. Might make this modular in the future.
                 switch (PackHubs[id].SelectedPackType)
                 {
                     case 0:
@@ -151,7 +161,6 @@ namespace packmule.ViewModels
 
         private void RecursiveCopy(DirectoryInfo source, DirectoryInfo target)
         {
-            throw new NotImplementedException();
             //https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=netframework-4.8
             if (source.FullName.ToLower() == target.FullName.ToLower())
             {
