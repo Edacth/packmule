@@ -8,7 +8,20 @@
              mc:Ignorable="d" 
              PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown" PreviewMouseMove="OnPreviewMouseMove"
              d:DesignHeight="450" d:DesignWidth="450" Width="450" Height="500" Margin="{Binding Position}">
-    
+    <UserControl.Resources>
+        <Style TargetType="Canvas">
+            <Setter Property="Background" Value="#bae8e8"/>
+        </Style>
+        <Style TargetType="ListBox">
+        </Style>
+        <Style TargetType="{x:Type GroupBox}">
+        </Style>
+        <Style TargetType="TabControl">
+        </Style>
+        <Style TargetType="ComboBox">
+            <!--<Setter Property="" Value="#FFFFFF"/>-->
+        </Style>
+    </UserControl.Resources>
     <Grid Margin="0" VerticalAlignment="Top" Height="500" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,19 +29,24 @@
             <RowDefinition Height="0*"/>
         </Grid.RowDefinitions>
         <!-- Row 0 -->
-        <Canvas Background="#FF84ABFF" Height="25" Margin="0,-1,0,0" VerticalAlignment="Bottom"/>
+        <Canvas Background="#FF272343" Height="28" Margin="0,-1,0,0" VerticalAlignment="Bottom"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="10,5,0,1" FontSize="15" MaxLength="60" MaxLines="1" IsUndoEnabled="True" Background="#00000000" BorderBrush="#00000000"/>
-            <TextBlock Text="{Binding Id, Mode=OneWay, StringFormat=ID \{0\}, UpdateSourceTrigger=LostFocus}" Grid.Column="1" FontStretch="SemiExpanded" TextAlignment="Right" Margin="0,5,10,0" FontSize="14"/>
+            <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="10,0,0,1" FontSize="15" MaxLength="60" MaxLines="1" IsUndoEnabled="True" Background="#00000000" BorderBrush="#00000000" Foreground="White"/>
+            <TextBlock Text="{Binding Id, Mode=OneWay, StringFormat=ID \{0\}, UpdateSourceTrigger=LostFocus}" Grid.Column="1" FontStretch="SemiExpanded" TextAlignment="Right" Margin="0,5,10,0" FontSize="14" Foreground="White"/>
+            <Button Content="X" Command="{x:Static pm:MainWindow.DeletePackHubCmd}" CommandParameter="{Binding Id}" Grid.Column="2" Margin="3,3,2,3" Background="#FFD65050"/>
         </Grid>
         <!-- Row 1-->
-        <Canvas Background="#FFACC3F5" Grid.Row="1" Margin="0" Grid.RowSpan="2">
-            <GroupBox Header="File Structure" Grid.Row="1" Canvas.Top="332" Height="53" Width="142" Canvas.Left="10">
-                <ComboBox ItemsSource="{Binding DataContext.StructurePaths, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding StructureType, Mode=TwoWay}" Canvas.Left="10" Canvas.Top="342" Height="30" Margin="10,0,10,1">
+        <Canvas Grid.Row="1" Margin="0" Grid.RowSpan="2">
+            <GroupBox Header="File Structure" Grid.Row="1" Canvas.Top="332" Height="53" Width="142" Canvas.Left="10" BorderThickness="1" Padding="0" BorderBrush="#FFFFCCF2" Background="#00000000">
+                <GroupBox.Foreground>
+                    <ImageBrush/>
+                </GroupBox.Foreground>
+                <ComboBox ItemsSource="{Binding DataContext.StructurePaths, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding StructureType, Mode=TwoWay}" Canvas.Left="10" Canvas.Top="342" Height="30" Margin="10,0,10,1" Background="Black">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>
@@ -39,7 +57,10 @@
 
             <GroupBox Header="Copy Target" Grid.Row="1" Height="53" Canvas.Left="355" Canvas.Top="332" Width="85">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <ComboBox ItemsSource="{Binding DataContext.PackHubs, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding CopyTarget}" Width="50" Height="30" Margin="0,0,0,1" RenderTransformOrigin="0.06,0.467">
+                    <ComboBox ItemsSource="{Binding DataContext.PackHubs, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding CopyTarget, Mode=TwoWay}" Width="50" Height="30" Margin="0,0,0,1" RenderTransformOrigin="0.06,0.467" BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                        <ComboBox.Background>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionTextColorKey}}"/>
+                        </ComboBox.Background>
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Id}"/>
@@ -52,7 +73,7 @@
             <GroupBox Header="Backup Target" Grid.Row="1" Height="53" Canvas.Left="263" Canvas.Top="386" Width="177">
                 <StackPanel Orientation="Horizontal">
                     <CheckBox IsChecked="{Binding BackupEnabled}" Content="Enabled" Margin="4,10,43,5" VerticalAlignment="Center" HorizontalAlignment="Center" Height="16"/>
-                    <ComboBox ItemsSource="{Binding DataContext.PackHubs, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding BackupTarget}" Canvas.Left="386" Canvas.Top="347" Width="50" Height="30">
+                    <ComboBox ItemsSource="{Binding DataContext.PackHubs, RelativeSource={RelativeSource AncestorType={x:Type pm:MainWindow}}}" SelectedIndex="{Binding BackupTarget, Mode=TwoWay}" Canvas.Left="386" Canvas.Top="347" Width="50" Height="30">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Id}"/>
@@ -63,8 +84,8 @@
             </GroupBox>
 
             <TabControl SelectedIndex="{Binding SelectedPackType, Mode=TwoWay}" Grid.Row="1" Canvas.Left="5" Canvas.Top="5" Margin="0" Width="440" Height="327">
-                <TabItem Header="Behavior">
-                    <ListBox Name="BListBox" ItemsSource="{Binding BPEntries}" Margin="0" Grid.Row="1" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right" Width="434">
+                <TabItem Header="Behavior" Background="#FFF2D6EB">
+                    <ListBox Name="BListBox" ItemsSource="{Binding BPEntries}" Margin="0" Grid.Row="1" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right" Width="434" >
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <local:PackInfo/>
@@ -91,7 +112,6 @@
                     </ListBox>
                 </TabItem>
             </TabControl>
-            <Button Content="Button" Command="{x:Static pm:MainWindow.DeletePackCmd}" CommandParameter="{Binding Source={x:Reference BListBox}, Path=SelectedIndex}" Canvas.Left="149" Canvas.Top="400" Width="75"/>
         </Canvas>
         <TextBox Text="{Binding BaseDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="23" Margin="10,12,10,10" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
     </Grid>

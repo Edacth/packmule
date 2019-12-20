@@ -71,8 +71,28 @@ namespace packmule.ViewModels
             PackHubs.Add(new PackHub(PackHubs.Count, new Thickness(450 * PackHubs.Count, 0, 0, 0), DefaultDirectory));
         }
 
+        public void DeletePackHub(int id)
+        {
+            if (id > PackHubs.Count - 1) { MessageBox.Show("Tried to delete a packhub that does not exist. Id: " + id); return; }
+            
+            // Remove hub from list
+            PackHubs.RemoveAt(id);
+
+            for (int i = 0; i < PackHubs.Count; i++)
+            {
+                if (PackHubs[i].Id > id)
+                {
+                    PackHubs[i].Id--;
+                }
+            }
+
+                // Wpf's Comboboxes act exactly the way I want them to when something is 
+                // removed so no additional logic is needed. Nice!
+         }
+
         public void CopyPack(int sourceId, int packIndex)
         {
+            if (PackHubs[sourceId].CopyTarget == -1) { return; }
             try
             {
                 DirectoryInfo source = new DirectoryInfo(@"C:\");
@@ -119,9 +139,9 @@ namespace packmule.ViewModels
 
                 RecursiveCopy(source, target);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(e.ToString());
             }
         }
 
@@ -152,9 +172,9 @@ namespace packmule.ViewModels
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(e.ToString());
             }
         }
 

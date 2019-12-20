@@ -20,7 +20,7 @@
             <ColumnDefinition Width="10*" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button Command="{x:Static pm:MainWindow.DeletePackCmd}" Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="#FFDC3434">
+        <Button Command="{x:Static pm:MainWindow.DeletePackCmd}" Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">
             <Button.CommandParameter>
                 <MultiBinding Converter="{StaticResource DefaultConverter}">
                     <Binding Path="Index"/>

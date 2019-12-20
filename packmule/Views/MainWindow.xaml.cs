@@ -26,6 +26,7 @@ namespace packmule
         public static RoutedCommand DeletePackCmd = new RoutedCommand();
         public static RoutedCommand ChangeTitleCmd = new RoutedCommand();
         public static RoutedCommand CreatePackHubCmd = new RoutedCommand();
+        public static RoutedCommand DeletePackHubCmd = new RoutedCommand();
         public static RoutedCommand PHSetPositionCmd = new RoutedCommand();
         public static RoutedCommand PHTranslateCmd = new RoutedCommand();
         public static RoutedCommand SetSelectedPHCmd = new RoutedCommand();
@@ -45,6 +46,7 @@ namespace packmule
             CommandBinding deletePackCmdBinding = new CommandBinding(DeletePackCmd, DeletePackCmdExecuted, DeletePackCmdCanExecute);
             CommandBinding changeTitleCmdBinding = new CommandBinding(ChangeTitleCmd, ChangeTitleCmdExecuted, ChangeTitleCmdCanExecute);
             CommandBinding createPackHubCmdBinding = new CommandBinding(CreatePackHubCmd, CreatePackHubCmdExecuted, CreatePackHubCanExecute);
+            CommandBinding deletePackHubCmdBinding = new CommandBinding(DeletePackHubCmd, DeletePackHubCmdExecuted, DeletePackHubCanExecute);
             CommandBinding PHSetPositionCmdBinding = new CommandBinding(PHSetPositionCmd, PHSetPositionCmdExecuted, PHSetPositionCanExecute);
             CommandBinding PHTranslateCmdBinding = new CommandBinding(PHTranslateCmd, PHTranslateCmdExecuted, PHTranslateCmdCanExecute);
             CommandBinding SetSelectedPHCmdBinding = new CommandBinding(SetSelectedPHCmd, SetSelectedPHCmdExecuted, SetSelectedPHCmdCanExecute);
@@ -57,6 +59,7 @@ namespace packmule
             this.CommandBindings.Add(deletePackCmdBinding);
             this.CommandBindings.Add(changeTitleCmdBinding);
             this.CommandBindings.Add(createPackHubCmdBinding);
+            this.CommandBindings.Add(deletePackHubCmdBinding);
             this.CommandBindings.Add(PHSetPositionCmdBinding);
             this.CommandBindings.Add(PHTranslateCmdBinding);
             this.CommandBindings.Add(SetSelectedPHCmdBinding);
@@ -110,7 +113,6 @@ namespace packmule
         #region CopyPackCmd
         private void CopyPackCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            // JK I don't think I need additional parameters
             if (e.Parameter != null)
             {
                 try
@@ -177,7 +179,29 @@ namespace packmule
 
         private void CreatePackHubCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = viewModel.PackHubs.Count < 4;
+            e.CanExecute = true;
+        }
+        #endregion
+        #region DeletePackHubCmd
+        private void DeletePackHubCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (e.Parameter != null)
+            {
+                try
+                {
+                    int id = (int)(e.Parameter as int?);
+                    viewModel.DeletePackHub(id);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+        }
+
+        private void DeletePackHubCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = viewModel.PackHubs.Count > 0;
         }
         #endregion
         #region PHSetPositionCmd 
