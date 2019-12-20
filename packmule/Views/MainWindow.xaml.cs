@@ -121,7 +121,22 @@ namespace packmule
                     int index = (int)(parameters[0]);
                     int id = (int)(parameters[1]);
 
-                    viewModel.CopyPack(id, index);
+                    if (viewModel.PackHubs[id].BackupEnabled)
+                    {
+                        viewModel.CopyPack(id, 
+                                           viewModel.PackHubs[id].SelectedPackType, 
+                                           index, 
+                                           viewModel.PackHubs[id].CopyTarget, 
+                                           viewModel.PackHubs[id].BackupTarget);
+                    }
+                    else
+                    {
+                        viewModel.CopyPack(id, 
+                                           viewModel.PackHubs[id].SelectedPackType, 
+                                           index, 
+                                           viewModel.PackHubs[id].CopyTarget, 
+                                           -1);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -132,7 +147,25 @@ namespace packmule
 
         private void CopyPackCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            if (e.Parameter != null)
+            {
+                try
+                {
+                    object[] parameters = (object[])e.Parameter;
+                    int index = (int)(parameters[0]);
+                    int id = (int)(parameters[1]);
+
+                    if (id != viewModel.PackHubs[id].CopyTarget && id != viewModel.PackHubs[id].BackupTarget)
+                    {
+                        e.CanExecute = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+            
         }
         #endregion
         #region DeletePackCmd

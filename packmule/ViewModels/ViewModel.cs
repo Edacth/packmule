@@ -57,9 +57,10 @@ namespace packmule.ViewModels
             StructurePaths.Add(new DirectoryStructure("ComMojang", "development_behavior_packs", "development_resource_packs", "minecraftWorlds"));
             StructurePaths.Add(new DirectoryStructure("Short Hand", "behavior", "resource", "worlds"));
 
-            // TODO: Populate packhubs from file
+            // Read preferences file
             LoadSettings();
 
+            // Read layoutfile
             if (LoadLayoutOnStart)
             {
                 LoadLayout();
@@ -86,29 +87,28 @@ namespace packmule.ViewModels
                 }
             }
 
-                // Wpf's Comboboxes act exactly the way I want them to when something is 
-                // removed so no additional logic is needed. Nice!
+            // Wpf's Comboboxes act exactly the way I want them to when something is 
+            // removed so no additional logic is needed. Nice!
          }
 
-        public void CopyPack(int sourceId, int packIndex)
+        public void CopyPack(int sourceId, int sourcePackType, int sourcePackIndex, int copyTargetId, int backupTargetId)
         {
-            if (PackHubs[sourceId].CopyTarget == -1) { return; }
+            if (copyTargetId == -1) { return; }
             try
             {
                 DirectoryInfo source = new DirectoryInfo(@"C:\");
                 DirectoryInfo target = new DirectoryInfo(@"C:\");
-                int targetId = PackHubs[sourceId].CopyTarget;
                 // This is hardcoded for behavior/resource/worlds. Might make this modular in the future.
-                switch (PackHubs[sourceId].SelectedPackType)
+                switch (sourcePackType)
                 {
                     case 0:
-                        source = new DirectoryInfo(PackHubs[sourceId].BPEntries[packIndex].Directory);
+                        source = new DirectoryInfo(PackHubs[sourceId].BPEntries[sourcePackIndex].Directory);
                         break;
                     case 1:
-                        source = new DirectoryInfo(PackHubs[sourceId].RPEntries[packIndex].Directory);
+                        source = new DirectoryInfo(PackHubs[sourceId].RPEntries[sourcePackIndex].Directory);
                         break;
                     case 2:
-                        source = new DirectoryInfo(PackHubs[sourceId].WorldEntries[packIndex].Directory);
+                        source = new DirectoryInfo(PackHubs[sourceId].WorldEntries[sourcePackIndex].Directory);
                         break;
                     default:
                         break;
@@ -119,25 +119,51 @@ namespace packmule.ViewModels
                 string[] separatedPath = source.FullName.Split(stringSeparators, StringSplitOptions.None);
                 string packName = separatedPath[separatedPath.Length - 1];
                 string structurePath = "";
-                switch (PackHubs[sourceId].SelectedPackType)
+                switch (sourcePackType)
                 {
                     case 0:
-                        structurePath = StructurePaths[PackHubs[targetId].StructureType].BPPath;
-                        target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                        structurePath = StructurePaths[PackHubs[copyTargetId].StructureType].BPPath;
+                        target = new DirectoryInfo(PackHubs[copyTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
                         break;
                     case 1:
-                        structurePath = StructurePaths[PackHubs[targetId].StructureType].RPPath;
-                        target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                        structurePath = StructurePaths[PackHubs[copyTargetId].StructureType].RPPath;
+                        target = new DirectoryInfo(PackHubs[copyTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
                         break;
                     case 2:
-                        structurePath = StructurePaths[PackHubs[targetId].StructureType].WorldPath;
-                        target = new DirectoryInfo(PackHubs[targetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                        structurePath = StructurePaths[PackHubs[copyTargetId].StructureType].WorldPath;
+                        target = new DirectoryInfo(PackHubs[copyTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
                         break;
                     default:
                         break;
                 }
 
                 RecursiveCopy(source, target);
+
+                // If backups are enabled, create one.
+                if (backupTargetId != -1)
+                {
+                    DirectoryInfo backup = new DirectoryInfo(@"C:\");
+
+                    switch (sourcePackType)
+                    {
+                        case 0:
+                            structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].BPPath;
+                            backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                            break;
+                        case 1:
+                            structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].RPPath;
+                            backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                            break;
+                        case 2:
+                            structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].WorldPath;
+                            backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    RecursiveCopy(source, backup);
+                }
             }
             catch (Exception e)
             {

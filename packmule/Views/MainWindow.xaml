@@ -30,7 +30,7 @@
                 <MenuItem Header="Load Layout" Command="{x:Static pm:MainWindow.LoadLayoutCmd}"/>
             </MenuItem>
             <MenuItem Header="_Preferences">
-                <MenuItem Header="Save Layout On Close" IsChecked="{Binding SaveLayoutOnClose}" IsCheckable="True" StaysOpenOnClick="True"/>
+                <MenuItem Header="Save Layout On Close [WIP]" IsChecked="{Binding SaveLayoutOnClose}" IsCheckable="True" StaysOpenOnClick="True"/>
                 <MenuItem Header="Load Layout On Start" IsChecked="{Binding LoadLayoutOnStart}" IsCheckable="True" StaysOpenOnClick="True"/>
                 <MenuItem Header="Save Preferences" Command="{x:Static pm:MainWindow.SavePrefsCmd}"/>
             </MenuItem>
