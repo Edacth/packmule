@@ -304,7 +304,7 @@ namespace packmule.ViewModels
             catch (Exception e)
             {
                 Console.WriteLine("The process failed: {0}", e.ToString());
-                MessageBoxResult messageBox = MessageBox.Show("Packmule failed to load settings file. It will continue with default settings.", "Settings Failure", MessageBoxButton.OK);
+                MessageBoxResult messageBox = MessageBox.Show("Packmule failed to load settings file. It will continue with default settings. This is normal if you have not saved any settings.", "Settings Failure", MessageBoxButton.OK);
                 SaveLayoutOnClose = true;
                 LoadLayoutOnStart = true;
                 DefaultDirectory = DefaultDirectory = System.IO.Directory.GetCurrentDirectory();
@@ -339,7 +339,7 @@ namespace packmule.ViewModels
             catch (Exception e)
             {
                 Console.WriteLine("The process failed: {0}", e.ToString());
-                MessageBoxResult messageBox = MessageBox.Show("Packmule failed to load layout file. It will continue with an empty layout.", "Settings Failure", MessageBoxButton.OK);
+                MessageBoxResult messageBox = MessageBox.Show("Packmule failed to load layout file. It will continue with an empty layout. This is normal if you have not saved a layout.", "Settings Failure", MessageBoxButton.OK);
 
             }
         }

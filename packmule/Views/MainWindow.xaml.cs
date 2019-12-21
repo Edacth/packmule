@@ -75,6 +75,8 @@ namespace packmule
                 new RoutedEventHandler(PackHubUC_MouseDragEventHandlerMethod));
             AddHandler(PackHubUC.SetDragStartPointEvent,
                 new RoutedEventHandler(PackHubUC_SetDragStartPoint));
+            AddHandler(PackHubUC.ChainChangePackTypeEvent,
+                new RoutedEventHandler(PackHubUC_ChainChangePackType));
         }
 
         #region MouseDragEvent
@@ -83,7 +85,7 @@ namespace packmule
             if (!viewModel.DraggingEnabled) { return; }
 
             MouseButtonEventArgs mouseArgs = (e as DragEventArgs).MouseArgs;
-            viewModel.SelectedPH = (e as DragEventArgs).ID;
+            viewModel.SelectedPH = (e as DragEventArgs).Id;
             dragStartPoint = mouseArgs.GetPosition(mouseArgs.Source as IInputElement);
         }
 
@@ -108,6 +110,16 @@ namespace packmule
                 }
 
             }
+        }
+        #endregion
+        #region Tabcontrol_SelectedChanged
+        private void PackHubUC_ChainChangePackType(object sender, RoutedEventArgs e)
+        {
+            // TODO: Prevent this from calling the function when the hubs are created.
+            // TODO: Implement the actual function 
+            int id = (e as SelectionEventArgs).Id;
+            int index = (e as SelectionEventArgs).Index;
+
         }
         #endregion
         #region CopyPackCmd

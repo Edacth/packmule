@@ -64,7 +64,7 @@
                 </StackPanel>
             </GroupBox>
 
-            <TabControl SelectedIndex="{Binding SelectedPackType, Mode=TwoWay}" Grid.Row="1" Canvas.Left="5" Canvas.Top="5" Margin="0" Width="440" Height="327">
+            <TabControl SelectedIndex="{Binding SelectedPackType, Mode=TwoWay}" Grid.Row="1" Canvas.Left="5" Canvas.Top="5" Margin="0" Width="440" Height="327" SelectionChanged="TabControl_SelectionChanged">
                 <TabItem Header="Behavior">
                     <ListBox Name="BListBox" ItemsSource="{Binding BPEntries}" Margin="0" Grid.Row="1" HorizontalContentAlignment="Stretch" HorizontalAlignment="Right" Width="434" >
                         <ListBox.ItemTemplate>

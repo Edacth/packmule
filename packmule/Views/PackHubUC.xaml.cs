@@ -36,6 +36,10 @@ namespace packmule
             EventManager.RegisterRoutedEvent("SetDragStartPointEvent", RoutingStrategy.Bubble,
                 typeof(RoutedEvent), typeof(PackHubUC));
 
+        public static readonly RoutedEvent ChainChangePackTypeEvent =
+            EventManager.RegisterRoutedEvent("ChainChangePackType", RoutingStrategy.Bubble,
+                typeof(RoutedEvent), typeof(PackHubUC));
+
         public event RoutedEventHandler MouseDrag
         {
             add { AddHandler(MouseDragEvent, value); }
@@ -48,6 +52,12 @@ namespace packmule
             remove { RemoveHandler(SetDragStartPointEvent, value); }
         }
 
+        public event RoutedEventHandler ChainChangePackType
+        {
+            add { AddHandler(ChainChangePackTypeEvent, value);  }
+            remove { RemoveHandler(ChainChangePackTypeEvent, value); }
+        }
+
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             RaiseEvent( new DragEventArgs(SetDragStartPointEvent, (DataContext as packmule.Models.PackHub).Id, e));
@@ -58,6 +68,11 @@ namespace packmule
         {
             RaiseEvent(new RoutedEventArgs(MouseDragEvent, e));
         }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RaiseEvent(new SelectionEventArgs(ChainChangePackTypeEvent, (DataContext as packmule.Models.PackHub).Id, (sender as TabControl).SelectedIndex));
+        }
     }
 
     // Creating my own args because I need to pass along addtional data
@@ -66,7 +81,7 @@ namespace packmule
         private readonly int _id;
         private readonly MouseButtonEventArgs _mouseArgs;
 
-        public int ID
+        public int Id
         {
             get { return _id; }
         }
@@ -80,6 +95,28 @@ namespace packmule
         {
             this._id = _id;
             this._mouseArgs = _mouseArgs;
+        }
+    }
+
+    public class SelectionEventArgs : RoutedEventArgs
+    {
+        private readonly int _id;
+        private readonly int _index;
+
+        public int Id
+        {
+            get { return _id; }
+        }
+
+        public int Index
+        {
+            get { return _index; }
+        }
+
+        public SelectionEventArgs(RoutedEvent routedEvent, int _id, int _index) : base(routedEvent)
+        {
+            this._id = _id;
+            this._index = _index;
         }
     }
 }
