@@ -93,6 +93,10 @@ namespace packmule.Models
         private int _backupTarget;
         public int BackupTarget { get => _backupTarget; set => SetProperty(ref _backupTarget, value); }
         #endregion
+        #region Initialized
+        private bool _initialized = false;
+        public bool Initialized { get => _initialized; set => SetProperty(ref _initialized, value); }
+        #endregion
         FileSystemWatcher watcher = new FileSystemWatcher();
         
 

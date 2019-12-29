@@ -71,7 +71,14 @@ namespace packmule
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            RaiseEvent(new SelectionEventArgs(ChainChangePackTypeEvent, (DataContext as packmule.Models.PackHub).Id, (sender as TabControl).SelectedIndex));
+            if ((DataContext as packmule.Models.PackHub).Initialized)
+            {
+                RaiseEvent(new SelectionEventArgs(ChainChangePackTypeEvent, (DataContext as packmule.Models.PackHub).Id, (sender as TabControl).SelectedIndex));
+            }
+            else
+            {
+                (DataContext as packmule.Models.PackHub).Initialized = true;
+            }
         }
     }
 

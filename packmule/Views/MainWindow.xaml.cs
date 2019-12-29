@@ -115,11 +115,10 @@ namespace packmule
         #region Tabcontrol_SelectedChanged
         private void PackHubUC_ChainChangePackType(object sender, RoutedEventArgs e)
         {
-            // TODO: Prevent this from calling the function when the hubs are created.
             // TODO: Implement the actual function 
             int id = (e as SelectionEventArgs).Id;
             int index = (e as SelectionEventArgs).Index;
-
+            viewModel.ChainChangePackType(id, index);
         }
         #endregion
         #region CopyPackCmd

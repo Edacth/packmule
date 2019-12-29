@@ -51,6 +51,8 @@ namespace packmule.ViewModels
         public string DefaultDirectory { get => _defaultDirectory; set => SetProperty(ref _defaultDirectory, value); }
         #endregion
 
+        private bool ignoreTabChange = false;
+
         public ViewModel()
         {
             // TODO: Have this read from a config file and populate StructurePaths that way
@@ -204,6 +206,59 @@ namespace packmule.ViewModels
             }
         }
 
+        public void ChainChangePackType(int id, int packType)
+        {
+            if (ignoreTabChange) { return; }
+            ignoreTabChange = true;
+
+            // List of hubs which are being processed
+            List<int> iterationList = new List<int>();
+            List<int> nextIterationList = new List<int>();
+            List<int> exemptionList = new List<int>();
+
+            // Add Initial pack to process list
+            iterationList.Add(id);
+
+            // While process list is not empty 
+            while (iterationList.Count > 0)
+            {
+
+                for (int i = 0; i < iterationList.Count; i++)
+                {
+                    // Set selectedpacktype for all hubs in process list
+                    PackHubs[iterationList[i]].SelectedPackType = packType;
+
+                    // Add procesed packs to an exemption list 
+                    exemptionList.Add(iterationList[i]);
+
+                    // Iterate through all hubs and add hubs targeted by hubs in process list to a next-process list.
+                    // Make sure targets are not on the examption list
+                    bool shouldAdd = true;
+                    for (int j = 0; j < exemptionList.Count; j++)
+                    {
+                        if (PackHubs[iterationList[i]].CopyTarget == exemptionList[j])
+                        {
+                            shouldAdd = false;
+                            break;
+                        }
+                    }
+                    if (shouldAdd)
+                    {
+                        nextIterationList.Add(PackHubs[iterationList[i]].CopyTarget);
+                    }
+
+                }
+                iterationList.Clear();
+                for (int i = 0; i < nextIterationList.Count; i++)
+                {
+                    iterationList.Add(nextIterationList[i]);
+                }
+                nextIterationList.Clear();
+            // Make list equal to secondary list
+            }
+
+            ignoreTabChange = false;
+        }
         private void RecursiveCopy(DirectoryInfo source, DirectoryInfo target)
         {
             //https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=netframework-4.8
@@ -252,7 +307,6 @@ namespace packmule.ViewModels
 
         public void SaveSettings()
         {
-            // TODO: Separate the settings and layout files
             // Encapsulate settings
             Settings settings = new Settings();
             settings.SaveLayoutOnClose = SaveLayoutOnClose;
