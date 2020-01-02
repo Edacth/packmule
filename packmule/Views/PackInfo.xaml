@@ -12,13 +12,14 @@
     </UserControl.Resources>
     <Grid VerticalAlignment="Top" Height="59" Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="37*"/>
-            <RowDefinition Height="22*"/>
+            <RowDefinition Height="35*"/>
+            <RowDefinition Height="24*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="10*" />
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="25*"/>
+            <ColumnDefinition Width="50*" />
+            <ColumnDefinition Width="189*"/>
+            <ColumnDefinition Width="25*"/>
         </Grid.ColumnDefinitions>
         <Button Command="{x:Static pm:MainWindow.DeletePackCmd}" Grid.Column="0" Grid.RowSpan="2" Margin="0" Content="X" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" Style="{DynamicResource ButtonStyleRed}">
             <Button.CommandParameter>
@@ -29,8 +30,9 @@
                 </MultiBinding>
             </Button.CommandParameter>
         </Button>
-        <TextBlock Text="{Binding header.name}" Grid.Column="1" VerticalAlignment="Top" Margin="10,10,10,0" Height="16"/>
-        <TextBlock Text="{Binding header.description}" Grid.Column="1" VerticalAlignment="Top" Margin="10,0" Height="16" Grid.Row="1"/>
+
+        <TextBlock Text="{Binding header.name}" Grid.Column="2" VerticalAlignment="Top" Margin="3,10,10,0" Height="16"/>
+        <TextBlock Text="{Binding header.description}" Grid.Column="2" VerticalAlignment="Top" Margin="3,0,10,0" Height="16" Grid.Row="1"/>
         <Button Command="{x:Static pm:MainWindow.CopyPackCmd}" Grid.Column="3" Margin="0" Grid.RowSpan="2" Height="59" VerticalAlignment="Bottom" Content="&gt;" Style="{DynamicResource ButtonStyleGreen}">
             <Button.CommandParameter>
                 <MultiBinding Converter="{StaticResource DefaultConverter}">
@@ -40,5 +42,6 @@
                 </MultiBinding>
             </Button.CommandParameter>
         </Button>
+        <Image Source="{Binding Path=IconSource}" SnapsToDevicePixels="True" Grid.RowSpan="2" Grid.Column="1" Margin="0"/>
     </Grid>
 </UserControl>

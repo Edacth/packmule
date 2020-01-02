@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:pm="clr-namespace:packmule"
         mc:Ignorable="d"
-        Title="Packmule" Height="600" Width="1000">
+        Title="Packmule" Height="600" Width="1000" SizeToContent="Width">
 
     <Window.InputBindings>
         <KeyBinding Command="{x:Static pm:MainWindow.CreatePackHubCmd}"

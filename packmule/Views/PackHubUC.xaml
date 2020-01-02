@@ -94,6 +94,6 @@
                 </TabItem>
             </TabControl>
         </Canvas>
-        <TextBox Text="{Binding BaseDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="23" Margin="10,12,10,10" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
+        <TextBox Text="{Binding BaseDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="23" Margin="10,12,10,10" Grid.Row="1" TextWrapping="NoWrap" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>

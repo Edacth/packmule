@@ -177,11 +177,12 @@ namespace packmule.Models
                 // Itterate through folders looking for packs
                 foreach (DirectoryInfo item in packDirs)
                 {
-                    // Read manifest and deserialize it
+                    
                     FileInfo[] manifestFiles = item.GetFiles("manifest.json");
                     // End the iteration if no manifest is found
                     if (manifestFiles.Length == 0) { continue; }
                     string manifestText;
+                    // Read manifest and deserialize it
                     using (StreamReader sr = manifestFiles[0].OpenText())
                     {
                         manifestText = sr.ReadToEnd();
@@ -189,6 +190,8 @@ namespace packmule.Models
                     PackInfo entry = Newtonsoft.Json.JsonConvert.DeserializeObject<PackInfo>(manifestText);
                     entry.Directory = item.FullName;
                     entry.Index = itemIndex;
+                    entry.IconPath = item.FullName + "\\pack_icon.png";
+                    entry.LoadIcon();
 
                     // If the pack utilizes lang files, grab the name/desc from the lang file
                     if (entry.header.name == "pack.name")

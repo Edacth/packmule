@@ -166,7 +166,9 @@ namespace packmule
                     int index = (int)(parameters[0]);
                     int id = (int)(parameters[1]);
 
-                    if (id != viewModel.PackHubs[id].CopyTarget && id != viewModel.PackHubs[id].BackupTarget)
+                    if (id != viewModel.PackHubs[id].CopyTarget 
+                        && ((viewModel.PackHubs[id].BackupEnabled && id != viewModel.PackHubs[id].BackupTarget) 
+                            || (viewModel.PackHubs[id].BackupEnabled == false)))
                     {
                         e.CanExecute = true;
                     }

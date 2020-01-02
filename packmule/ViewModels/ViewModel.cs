@@ -208,10 +208,11 @@ namespace packmule.ViewModels
 
         public void ChainChangePackType(int id, int packType)
         {
+            // This is to prevent the tab change event from triggering 
+            // when this function changes the selectedIndex/SelectedPackType
             if (ignoreTabChange) { return; }
             ignoreTabChange = true;
 
-            // List of hubs which are being processed
             List<int> iterationList = new List<int>();
             List<int> nextIterationList = new List<int>();
             List<int> exemptionList = new List<int>();
@@ -219,42 +220,56 @@ namespace packmule.ViewModels
             // Add Initial pack to process list
             iterationList.Add(id);
 
-            // While process list is not empty 
+            // While iteration list is not empty 
             while (iterationList.Count > 0)
             {
 
+                // Iterate through iterationList and add the targeted hubs to the next iteration list.
                 for (int i = 0; i < iterationList.Count; i++)
                 {
-                    // Set selectedpacktype for all hubs in process list
+                    // Set selectedpacktype for all hubs in iteration list
                     PackHubs[iterationList[i]].SelectedPackType = packType;
 
                     // Add procesed packs to an exemption list 
                     exemptionList.Add(iterationList[i]);
 
-                    // Iterate through all hubs and add hubs targeted by hubs in process list to a next-process list.
-                    // Make sure targets are not on the examption list
-                    bool shouldAdd = true;
+                    // Also make sure targets are not on the exemptionList
+                    bool shouldAddCopyTarget = true;
+                    bool shouldAddBackupTarget = true;
                     for (int j = 0; j < exemptionList.Count; j++)
                     {
                         if (PackHubs[iterationList[i]].CopyTarget == exemptionList[j])
                         {
-                            shouldAdd = false;
+                            shouldAddCopyTarget = false;
+                        }
+
+                        if (!PackHubs[iterationList[i]].BackupEnabled || PackHubs[iterationList[i]].BackupTarget == exemptionList[j])
+                        {
+                            shouldAddBackupTarget = false;
+                        }
+
+                        if (!shouldAddCopyTarget && !shouldAddBackupTarget)
+                        {
                             break;
                         }
                     }
-                    if (shouldAdd)
+                    if (shouldAddCopyTarget)
                     {
                         nextIterationList.Add(PackHubs[iterationList[i]].CopyTarget);
                     }
+                    if (shouldAddBackupTarget)
+                    {
+                        nextIterationList.Add(PackHubs[iterationList[i]].BackupTarget);
+                    }
 
                 }
+                // Make iterationList equal to nextIterationList and then clear nextIterationList
                 iterationList.Clear();
                 for (int i = 0; i < nextIterationList.Count; i++)
                 {
                     iterationList.Add(nextIterationList[i]);
                 }
                 nextIterationList.Clear();
-            // Make list equal to secondary list
             }
 
             ignoreTabChange = false;
