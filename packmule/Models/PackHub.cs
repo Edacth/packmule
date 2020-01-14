@@ -42,6 +42,12 @@ namespace packmule.Models
                         if (DirInfo.Exists)
                         {
                             watcher.Path = value;
+
+                            watcher.EnableRaisingEvents = true;
+                        }
+                        else
+                        {
+                            watcher.EnableRaisingEvents = false;
                         }
                         PopulateLists();
                     }
@@ -49,7 +55,6 @@ namespace packmule.Models
                     {
                         Console.WriteLine("The process failed: {0}", e.ToString());
                     }
-
                 }
             }
         }
@@ -118,8 +123,6 @@ namespace packmule.Models
                        int _StructureType, string _BaseDirectory, int _CopyTarget,
                        bool _BackupEnabled, int _BackupTarget)
         {
-            
-
             Position = _Position;
             Id = _Id;
             Title = (_Title == "") ? "Pack Hub: " + Id : _Title;
@@ -132,8 +135,6 @@ namespace packmule.Models
 
             #region FileSystemWatcher
             // https://docs.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher?view=netframework-4.8
-            
-            watcher.Path = BaseDirectory;
 
             // Watch for changes in LastAccess and LastWrite times, and
             // the renaming of files or directories.
@@ -149,8 +150,6 @@ namespace packmule.Models
             watcher.Created += OnChanged;
             watcher.Deleted += OnChanged;
             watcher.Renamed += OnChanged;
-
-            watcher.EnableRaisingEvents = true;
             
             #endregion
         }
