@@ -25,10 +25,16 @@ jobs:
     - name: MSBuild
       run: msbuild .\packmule\packmule.csproj
     
+    - name: Zip build
+      uses: montudor/action-zip@v0.1.0
+      with:
+        args: zip -qq -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
+    
     - name: Upload to release
       uses: softprops/action-gh-release@v1
       with:
         files: |
           README.md
+          .\packmule\packmule\bin\debug.zip
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
