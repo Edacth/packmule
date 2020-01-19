@@ -137,6 +137,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>powershell.exe -file "$(SolutionDir)\archive.ps1" -ConfigurationName "Debug" -SolutionDir C:\Users\Cade\Desktop\packmule\ -TargetDir C:\Users\Cade\Desktop\packmule\packmule\bin\Debug\ -ProjectName "packmule"</PostBuildEvent>
+    <PostBuildEvent>powershell.exe -file "$(SolutionDir)\archive.ps1" -ConfigurationName "Debug" -SolutionDir $(SolutionDir) -TargetDir $(SolutionDir)\packmule\bin\Debug\ -ProjectName "packmule"</PostBuildEvent>
   </PropertyGroup>
 </Project>
