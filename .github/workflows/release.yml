@@ -26,9 +26,13 @@ jobs:
       run: msbuild .\packmule\packmule.csproj
     
     - name: Zip build
-      uses: montudor/action-zip@v0.1.0
-      with:
-        args: zip -qq -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
+      run: |
+        zip .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
+      #uses: montudor/action-zip@v0.1.0
+      #with:
+        #args: zip -qq -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
+        
+      
     
     - name: Upload to release
       uses: softprops/action-gh-release@v1
