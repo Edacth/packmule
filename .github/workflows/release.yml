@@ -26,8 +26,7 @@ jobs:
       run: msbuild .\packmule\packmule.csproj
     
     - name: Zip build
-      run: |
-        zip .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
+      run: zip -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
       #uses: montudor/action-zip@v0.1.0
       #with:
         #args: zip -qq -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
