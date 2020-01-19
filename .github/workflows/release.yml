@@ -25,8 +25,8 @@ jobs:
     - name: MSBuild
       run: msbuild .\packmule\packmule.csproj
     
-    - name: Zip build
-      run: zip -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
+    #- name: Zip build
+      #run: zip -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
       #uses: montudor/action-zip@v0.1.0
       #with:
         #args: zip -qq -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
@@ -38,6 +38,6 @@ jobs:
       with:
         files: |
           README.md
-          .\packmule\packmule\bin\debug.zip
+          .\packmule\PublishOutput\packmule.zip
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
