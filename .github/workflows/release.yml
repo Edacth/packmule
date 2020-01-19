@@ -24,4 +24,4 @@ jobs:
       
     - name: MSBuild
       working-directory: src
-      run: msbuild packmule\packmule.csproj
+      run: msbuild .\packmule\packmule.csproj
