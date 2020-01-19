@@ -2,7 +2,6 @@ name: .NET Core
 
 on:
   release:
-  push:
     types: [published, prereleased]
 
 jobs:
