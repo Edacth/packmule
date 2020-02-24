@@ -140,6 +140,7 @@ namespace packmule.ViewModels
                 }
 
                 RecursiveCopy(source, target);
+                PackHubs[copyTargetId].PopulateLists();
 
                 // If backups are enabled, create one.
                 if (backupTargetId != -1)
@@ -165,6 +166,7 @@ namespace packmule.ViewModels
                     }
 
                     RecursiveCopy(source, backup);
+                    PackHubs[backupTargetId].PopulateLists();
                 }
             }
             catch (Exception e)
@@ -199,6 +201,7 @@ namespace packmule.ViewModels
                     default:
                         break;
                 }
+                PackHubs[id].PopulateLists();
             }
             catch (Exception e)
             {

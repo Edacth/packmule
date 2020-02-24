@@ -154,7 +154,7 @@ namespace packmule.Models
             #endregion
         }
 
-        private void PopulateLists()
+        public void PopulateLists()
         {
             BPEntries.Clear();
             RPEntries.Clear();
@@ -293,6 +293,8 @@ namespace packmule.Models
             }
             return false;
         }
+
+        // Called when the file watcher detects a change
         private void OnChanged(object source, FileSystemEventArgs e)
         {
             App.Current.Dispatcher.Invoke((Action)delegate
