@@ -139,6 +139,7 @@ namespace packmule.ViewModels
                         break;
                 }
 
+                if (target.Exists) { target.Delete(true); }
                 RecursiveCopy(source, target);
                 PackHubs[copyTargetId].PopulateLists();
 
@@ -165,6 +166,7 @@ namespace packmule.ViewModels
                             break;
                     }
 
+                    if (backup.Exists) { backup.Delete(true); }
                     RecursiveCopy(source, backup);
                     PackHubs[backupTargetId].PopulateLists();
                 }
