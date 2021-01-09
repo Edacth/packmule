@@ -31,9 +31,14 @@ jobs:
     - name: MSBuild
       #run: msbuild .\packmule\packmule.csproj
       run: msbuild packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-    
-    - name: Zip build
-      run: zip -r .\packmule\packmule\bin\Release.zip .\packmule\packmule\bin\Release\
+      
+      
+      
+    - name: Zip output
+    - uses: montudor/action-zip@v0.1.1
+      with:
+        args: zip -qq -r .\packmule\packmule\bin\Release.zip .\packmule\packmule\bin\Release\
+      
       #uses: montudor/action-zip@v0.1.0
       #with:
         #args: zip -qq -r .\packmule\packmule\bin\Release.zip .\packmule\packmule\bin\Release\
