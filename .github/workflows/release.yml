@@ -30,7 +30,7 @@ jobs:
       
     - name: MSBuild
       #run: msbuild .\packmule\packmule.csproj
-      run: msbuild.exe packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
+      run: msbuild packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
     
     #- name: Zip build
       #run: zip -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
@@ -43,6 +43,7 @@ jobs:
       with:
         files: |
           README.md
+          .\packmule\bin\Release\packmule.exe
           .\packmule\PublishOutput\packmule.zip
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
