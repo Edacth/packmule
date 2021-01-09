@@ -30,7 +30,7 @@ jobs:
       
     - name: MSBuild
       #run: msbuild .\packmule\packmule.csproj
-      run: msbuild.exe packmule.sln /p:platform="Any CPU" /p:configuration="Release"
+      run: msbuild.exe packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
     
     #- name: Zip build
       #run: zip -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
