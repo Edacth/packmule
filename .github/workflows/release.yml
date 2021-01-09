@@ -32,11 +32,11 @@ jobs:
       #run: msbuild .\packmule\packmule.csproj
       run: msbuild packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
     
-    #- name: Zip build
-      #run: zip -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
+    - name: Zip build
+      run: zip -r .\packmule\packmule\bin\Release.zip .\packmule\packmule\bin\Release\
       #uses: montudor/action-zip@v0.1.0
       #with:
-        #args: zip -qq -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
+        #args: zip -qq -r .\packmule\packmule\bin\Release.zip .\packmule\packmule\bin\Release\
     
     - name: Upload to release
       uses: softprops/action-gh-release@v1
@@ -44,6 +44,7 @@ jobs:
         files: |
           README.md
           .\packmule\bin\Release\packmule.exe
+          .\packmule\packmule\bin\Release.zip
           .\packmule\PublishOutput\packmule.zip
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
