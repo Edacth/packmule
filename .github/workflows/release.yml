@@ -35,7 +35,7 @@ jobs:
       
       
     - name: Zip output
-    - uses: montudor/action-zip@v0.1.1
+      uses: montudor/action-zip@v0.1.1
       with:
         args: zip -qq -r .\packmule\packmule\bin\Release.zip .\packmule\packmule\bin\Release\
       
