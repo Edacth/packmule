@@ -137,16 +137,14 @@ namespace packmule
                         viewModel.CopyPack(id, 
                                            viewModel.PackHubs[id].SelectedPackType, 
                                            index, 
-                                           viewModel.PackHubs[id].CopyTarget, 
-                                           viewModel.PackHubs[id].BackupTarget);
+                                           viewModel.PackHubs[id].CopyTarget);
                     }
                     else
                     {
                         viewModel.CopyPack(id, 
                                            viewModel.PackHubs[id].SelectedPackType, 
                                            index, 
-                                           viewModel.PackHubs[id].CopyTarget, 
-                                           -1);
+                                           viewModel.PackHubs[id].CopyTarget);
                     }
                 }
                 catch (Exception ex)

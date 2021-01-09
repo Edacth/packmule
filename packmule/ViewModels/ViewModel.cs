@@ -93,7 +93,7 @@ namespace packmule.ViewModels
             // removed so no additional logic is needed. Nice!
          }
 
-        public void CopyPack(int sourceId, int sourcePackType, int sourcePackIndex, int copyTargetId, int backupTargetId)
+        public void CopyPack(int sourceId, int sourcePackType, int sourcePackIndex, int copyTargetId)
         {
             if (copyTargetId == -1) { return; }
             try
@@ -139,37 +139,41 @@ namespace packmule.ViewModels
                         break;
                 }
 
-                if (target.Exists) { target.Delete(true); }
+                if (target.Exists)
+                {
+                    // If backups are enabled on the target, create one.
+                    if (PackHubs[copyTargetId].BackupEnabled && PackHubs[copyTargetId].BackupTarget != -1)
+                    {
+                        int backupTargetId = PackHubs[copyTargetId].BackupTarget;
+                        DirectoryInfo backup = new DirectoryInfo(@"C:\");
+
+                        switch (sourcePackType)
+                        {
+                            case 0:
+                                structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].BPPath;
+                                backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                                break;
+                            case 1:
+                                structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].RPPath;
+                                backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                                break;
+                            case 2:
+                                structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].WorldPath;
+                                backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if (backup.Exists) { SyncronousDelete(backup); /*backup.Delete(true);*/ }
+                        RecursiveCopy(target, backup);
+                        PackHubs[backupTargetId].PopulateLists();
+                    }
+                    //target.Delete(true);
+                    SyncronousDelete(target);
+                }
                 RecursiveCopy(source, target);
                 PackHubs[copyTargetId].PopulateLists();
-
-                // If backups are enabled, create one.
-                if (backupTargetId != -1)
-                {
-                    DirectoryInfo backup = new DirectoryInfo(@"C:\");
-
-                    switch (sourcePackType)
-                    {
-                        case 0:
-                            structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].BPPath;
-                            backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
-                            break;
-                        case 1:
-                            structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].RPPath;
-                            backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
-                            break;
-                        case 2:
-                            structurePath = StructurePaths[PackHubs[backupTargetId].StructureType].WorldPath;
-                            backup = new DirectoryInfo(PackHubs[backupTargetId].BaseDirectory + "\\" + structurePath + "\\" + packName);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    if (backup.Exists) { backup.Delete(true); }
-                    RecursiveCopy(source, backup);
-                    PackHubs[backupTargetId].PopulateLists();
-                }
             }
             catch (Exception e)
             {
@@ -184,24 +188,27 @@ namespace packmule.ViewModels
 
             try
             {
-                DirectoryInfo directory;
+                DirectoryInfo directory = new DirectoryInfo(@"C:\");
                 // This is hardcoded for behavior/resource/worlds. Might make this modular in the future.
                 switch (PackHubs[id].SelectedPackType)
                 {
                     case 0:
                         directory = new DirectoryInfo(PackHubs[id].BPEntries[packIndex].Directory);
-                        directory.Delete(true);
+                        //directory.Delete(true);
+                        SyncronousDelete(directory);
                         break;
                     case 1:
                         directory = new DirectoryInfo(PackHubs[id].RPEntries[packIndex].Directory);
-                        directory.Delete(true);
+                        //directory.Delete(true);
+                        SyncronousDelete(directory);
                         break;
                     case 2:
                         directory = new DirectoryInfo(PackHubs[id].WorldEntries[packIndex].Directory);
-                        directory.Delete(true);
+                        //directory.Delete(true);
+                        SyncronousDelete(directory);
                         break;
                     default:
-                        break;
+                        return;
                 }
                 PackHubs[id].PopulateLists();
             }
@@ -209,6 +216,22 @@ namespace packmule.ViewModels
             {
                 MessageBox.Show(e.ToString());
             }
+        }
+
+        private void SyncronousDelete(DirectoryInfo directory)
+        {
+            directory.Delete(true);
+            
+            for (int i = 0; i < 1000; i++)
+            {
+                if (!Directory.Exists(directory.FullName))
+                {
+                    //Console.WriteLine("PASSED AT " + i);
+                    //Console.WriteLine(directory.FullName);
+                    return;
+                }
+            }
+            //Console.WriteLine("EXCEEDED");
         }
 
         public void ChainChangePackType(int id, int packType)
@@ -286,18 +309,36 @@ namespace packmule.ViewModels
             {
                 return;
             }
+            if (target.FullName.EndsWith("BP"))
+            {
+                Console.WriteLine(target.FullName);
+                Console.WriteLine("Exists?: " + target.Exists);
+            }
 
             // Check if the target directory exists, if not, create it.
             if (Directory.Exists(target.FullName) == false)
             {
+                Console.WriteLine(target.FullName + " DOES NOT EXIST");
                 Directory.CreateDirectory(target.FullName);
             }
 
             // Copy each file into it's new directory.
             foreach (FileInfo fi in source.GetFiles())
             {
-                Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
-                fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+                try
+                {
+                    //Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
+                    //String temp = Path.Combine(target.ToString(), fi.Name);
+                    if (!Directory.Exists(target.FullName))
+                    {
+                        Console.WriteLine("BAD");
+                    }
+                    fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+                }
+                catch (System.IO.DirectoryNotFoundException e)
+                {
+                    Console.Write(e.ToString());
+                }
             }
 
             // Copy each subdirectory using recursion.
