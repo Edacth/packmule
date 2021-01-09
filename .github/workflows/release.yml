@@ -22,16 +22,21 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
       
-    #- name: MSBuild
-    #  run: msbuild .\packmule\packmule.csproj
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+
+    - name: Create Build Directory
+      run: mkdir _build
+      
+    - name: MSBuild
+      #run: msbuild .\packmule\packmule.csproj
+      run: msbuild.exe packmule.sln /p:platform="Any CPU" /p:configuration="Release"
     
     #- name: Zip build
       #run: zip -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
       #uses: montudor/action-zip@v0.1.0
       #with:
         #args: zip -qq -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
-        
-      
     
     - name: Upload to release
       uses: softprops/action-gh-release@v1
