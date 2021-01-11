@@ -13,31 +13,43 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
       
-    - name: Setup Nuget.exe
-      uses: warrenbuckley/Setup-Nuget@v1
-      
+    - name: Setup NuGet.exe for use with actions
+      uses: NuGet/setup-nuget@v1.0.5
+
     - name: Nuget restore
-      run: nuget restore .\packmule.sln
+      run: nuget restore packmule.sln
       
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+      
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+
+    - name: Create Build Directory
+      run: mkdir _build
       
     - name: MSBuild
-      run: msbuild .\packmule\packmule.csproj
-    
-    #- name: Zip build
-      #run: zip -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
-      #uses: montudor/action-zip@v0.1.0
-      #with:
-        #args: zip -qq -r .\packmule\packmule\bin\debug.zip .\packmule\packmule\bin\debug\
-        
+      #run: msbuild .\packmule\packmule.csproj
+      run: msbuild packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
       
+    - name: Zip
+      #run: tar.exe -a -c -f ".\packmule\bin\packmule.zip" ".\packmule\bin\Release"
+      run: .\packmule\compress.ps1
+      shell: powershell
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: EZRepBundle
+        path: "./"
     
     - name: Upload to release
       uses: softprops/action-gh-release@v1
       with:
         files: |
           README.md
-          .\packmule\PublishOutput\packmule.zip
+          .\packmule\bin\packmule.zip
+          .\packmule\packmule\bin\Release.zip
+          #.\packmule\PublishOutput\packmule.zip
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
