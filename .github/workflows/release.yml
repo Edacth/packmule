@@ -32,6 +32,9 @@ jobs:
       #run: msbuild .\packmule\packmule.csproj
       run: msbuild packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
       
+    - name: Change dir again
+      run: cd packmule
+      
     - name: Zip
       #run: tar.exe -a -c -f ".\packmule\bin\packmule.zip" ".\packmule\bin\Release"
       run: .\packmule\compress.ps1
