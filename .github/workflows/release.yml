@@ -33,27 +33,21 @@ jobs:
       run: msbuild packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
       
     - name: Zip
-      #run: tar.exe -a -c -f ".\packmule\packmule\bin\Release.zip" ".\packmule\packmule\bin\Release"
-      run: tar.exe -a -c -f ".\packmule\bin\Release.zip" ".\packmule\bin\Release"
+      run: tar.exe -a -c -f ".\packmule\bin\packmule.zip" ".\packmule\bin\Release"
       
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: EZRepBundle
         path: "./"
-      
-    #- name: Zip output
-      #uses: montudor/action-zip@v0.1.1
-      #with:
-        #args: zip -qq -r .\packmule\packmule\bin\Release.zip .\packmule\packmule\bin\Release\
     
     - name: Upload to release
       uses: softprops/action-gh-release@v1
       with:
         files: |
           README.md
-          .\packmule\bin\Release\packmule.exe
+          .\packmule\bin\packmule.zip
           .\packmule\packmule\bin\Release.zip
-          .\packmule\PublishOutput\packmule.zip
+          #.\packmule\PublishOutput\packmule.zip
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
