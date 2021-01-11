@@ -32,6 +32,9 @@ jobs:
       #run: msbuild .\packmule\packmule.csproj
       run: msbuild packmule.sln /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
       
+    - name: Zip
+      run: tar.exe -a -c -f ".\packmule\packmule\bin\Release.zip" ".\packmule\packmule\bin\Release"
+      
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
