@@ -37,11 +37,12 @@ jobs:
       
     - name: Zip
       #run: tar.exe -a -c -f ".\packmule\bin\packmule.zip" ".\packmule\bin\Release"
-      run: .\packmule\compress.ps1
+      run: ./compress.ps1
       shell: powershell
       
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
+      if: failure()
       with:
         name: EZRepBundle
         path: "./"
