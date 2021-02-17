@@ -95,6 +95,7 @@ namespace packmule.ViewModels
 
         public void CopyPack(int sourceId, int sourcePackType, int sourcePackIndex, int copyTargetId)
         {
+            bool fileLockDetected = false;
             if (copyTargetId == -1) { return; }
             try
             {
@@ -114,6 +115,11 @@ namespace packmule.ViewModels
                         break;
                     default:
                         break;
+                }
+
+                if (RecursiveIsFileLocked(source))
+                {
+                    fileLockDetected = true;
                 }
 
                 // Create target DirectoryInfo by appending baseDirectory and the correct structurePath
@@ -139,7 +145,12 @@ namespace packmule.ViewModels
                         break;
                 }
 
-                if (target.Exists)
+                if (RecursiveIsFileLocked(target))
+                {
+                    fileLockDetected = true;
+                }
+
+                if (!fileLockDetected && target.Exists)
                 {
                     // If backups are enabled on the target, create one.
                     if (PackHubs[copyTargetId].BackupEnabled && PackHubs[copyTargetId].BackupTarget != -1)
@@ -165,15 +176,33 @@ namespace packmule.ViewModels
                                 break;
                         }
 
-                        if (backup.Exists) { SyncronousDelete(backup); /*backup.Delete(true);*/ }
-                        RecursiveCopy(target, backup);
-                        PackHubs[backupTargetId].PopulateLists();
+                        if (RecursiveIsFileLocked(backup) == false)
+                        {
+                            if (target.Exists && target.GetFiles().Length > 0)
+                            {
+                                if (backup.Exists) { SyncronousDelete(backup); }
+                                Console.WriteLine(target.GetFiles().Length);
+                                RecursiveCopy(target, backup);
+                                PackHubs[backupTargetId].PopulateLists();
+                            }
+                        }
+                        
                     }
-                    //target.Delete(true);
                     SyncronousDelete(target);
                 }
-                RecursiveCopy(source, target);
-                PackHubs[copyTargetId].PopulateLists();
+                if (fileLockDetected == false)
+                {
+                    RecursiveCopy(source, target);
+                    PackHubs[copyTargetId].PopulateLists();
+                }
+                else
+                {
+                    showFileLockMessageBox(false, new Exception(""));
+                }
+            }
+            catch (IOException e)
+            {
+                showFileLockMessageBox(true, e);
             }
             catch (Exception e)
             {
@@ -186,40 +215,36 @@ namespace packmule.ViewModels
             MessageBoxResult messageBoxResult = MessageBox.Show("Are you sure?", "Deletion Confirmation", MessageBoxButton.YesNo);
             if (messageBoxResult != MessageBoxResult.Yes) { return; }
 
-            try
+
+            DirectoryInfo directory = new DirectoryInfo(@"C:\");
+            // This is hardcoded for behavior/resource/worlds. Might make this modular in the future.
+            switch (PackHubs[id].SelectedPackType)
             {
-                DirectoryInfo directory = new DirectoryInfo(@"C:\");
-                // This is hardcoded for behavior/resource/worlds. Might make this modular in the future.
-                switch (PackHubs[id].SelectedPackType)
-                {
-                    case 0:
-                        directory = new DirectoryInfo(PackHubs[id].BPEntries[packIndex].Directory);
-                        //directory.Delete(true);
-                        SyncronousDelete(directory);
-                        break;
-                    case 1:
-                        directory = new DirectoryInfo(PackHubs[id].RPEntries[packIndex].Directory);
-                        //directory.Delete(true);
-                        SyncronousDelete(directory);
-                        break;
-                    case 2:
-                        directory = new DirectoryInfo(PackHubs[id].WorldEntries[packIndex].Directory);
-                        //directory.Delete(true);
-                        SyncronousDelete(directory);
-                        break;
-                    default:
-                        return;
-                }
-                PackHubs[id].PopulateLists();
+                case 0:
+                    directory = new DirectoryInfo(PackHubs[id].BPEntries[packIndex].Directory);
+                    //directory.Delete(true);
+                    SyncronousDelete(directory);
+                    break;
+                case 1:
+                    directory = new DirectoryInfo(PackHubs[id].RPEntries[packIndex].Directory);
+                    //directory.Delete(true);
+                    SyncronousDelete(directory);
+                    break;
+                case 2:
+                    directory = new DirectoryInfo(PackHubs[id].WorldEntries[packIndex].Directory);
+                    //directory.Delete(true);
+                    SyncronousDelete(directory);
+                    break;
+                default:
+                    return;
             }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
+            PackHubs[id].PopulateLists();
         }
 
         private void SyncronousDelete(DirectoryInfo directory)
         {
+            //FileInfo file = new FileInfo(directory.FullName);
+            //bool test = IsFileLocked(file);
             directory.Delete(true);
             
             for (int i = 0; i < 1000; i++)
@@ -232,6 +257,7 @@ namespace packmule.ViewModels
                 }
             }
             //Console.WriteLine("EXCEEDED");
+            directory.Refresh();
         }
 
         public void ChainChangePackType(int id, int packType)
@@ -309,11 +335,6 @@ namespace packmule.ViewModels
             {
                 return;
             }
-            if (target.FullName.EndsWith("BP"))
-            {
-                Console.WriteLine(target.FullName);
-                Console.WriteLine("Exists?: " + target.Exists);
-            }
 
             // Check if the target directory exists, if not, create it.
             if (Directory.Exists(target.FullName) == false)
@@ -348,6 +369,59 @@ namespace packmule.ViewModels
                     target.CreateSubdirectory(diSourceSubDir.Name);
                 RecursiveCopy(diSourceSubDir, nextTargetSubDir);
             }
+        }
+
+        private bool RecursiveIsFileLocked(DirectoryInfo directory)
+        {
+            // If the directory does not exist, it cannot be locked
+            directory.Refresh();
+            if (!directory.Exists)
+            {
+                return false;
+            }
+            //DirectoryInfo test = new DirectoryInfo(directory.FullName);
+
+            // Check files in directory
+            foreach (FileInfo fi in directory.GetFiles())
+            {
+                if (IsFileLocked(fi))
+                {
+                    return true;
+                }
+
+                foreach (DirectoryInfo subDir in directory.GetDirectories())
+                {
+                    RecursiveIsFileLocked(subDir);
+                }
+            }
+            return false;
+        }
+
+        private bool IsFileLocked(FileInfo file)
+        {
+            //https://stackoverflow.com/questions/876473/is-there-a-way-to-check-if-a-file-is-in-use
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            catch (System.UnauthorizedAccessException e)
+            {
+                return true;
+            }
+
+            //file is not locked
+            return false;
         }
 
         public void PHSetPosition(int id, Thickness newPosition)
@@ -457,6 +531,16 @@ namespace packmule.ViewModels
                 MessageBoxResult messageBox = MessageBox.Show("Packmule failed to load layout file. It will continue with an empty layout. This is normal if you have not saved a layout.", "Settings Failure", MessageBoxButton.OK);
 
             }
+        }
+
+        private void showFileLockMessageBox(bool hasExceptionData, Exception e)
+        {
+            String message = "Packmule has detected file lock in the operation directories and aborted the operation. Please check other programs and try again.";
+            if (hasExceptionData)
+            {
+                message = message + " Here is the exception.\n\n" + e.ToString();
+            }
+            MessageBox.Show(message);
         }
     }
 }
