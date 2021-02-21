@@ -388,11 +388,11 @@ namespace packmule.ViewModels
                 {
                     return true;
                 }
+            }
 
-                foreach (DirectoryInfo subDir in directory.GetDirectories())
-                {
-                    RecursiveIsFileLocked(subDir);
-                }
+            foreach (DirectoryInfo subDir in directory.GetDirectories())
+            {
+                RecursiveIsFileLocked(subDir);
             }
             return false;
         }
